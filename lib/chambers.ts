@@ -12,7 +12,9 @@ export type Chamber = {
   index: number;
   combo: string;
   short: string;
+  rim: string;
   title: string;
+  doorTitle: string;
   kicker: string;
   lead: string;
   body: string;
@@ -26,7 +28,9 @@ export const CHAMBERS: Chamber[] = [
     index: 0,
     combo: "00",
     short: "Dizajn",
+    rim: "Dizajn",
     title: "Web dizajn, ktorý vyzerá ako značka, nie ako šablóna",
+    doorTitle: "Značka, nie šablóna",
     kicker: "Komora 00 · vizuál",
     lead: "Najprv kreslím, potom kódim. Dizajn drží tvar ešte pred prvým commitom.",
     body: "Navrhnem vizuálnu identitu stránky: typografiu, rytmus, farby a rozloženie, ktoré sedí na firmu. Žiadny katalóg motívov. Stránka má byť zapamätateľná hneď, ako sa otvorí.",
@@ -42,7 +46,9 @@ export const CHAMBERS: Chamber[] = [
     index: 1,
     combo: "06",
     short: "Stavba",
+    rim: "Stavba",
     title: "Celý web na kľúč, od štruktúry po nasadenie",
+    doorTitle: "Web na kľúč",
     kicker: "Komora 06 · kód",
     lead: "Jeden človek postaví stránku tak, aby sa dala spustiť, nie len ukázať vo Figme.",
     body: "Poskladám kompletný web: štruktúru, kód, formuláre, rýchlosť a publikovanie. Pracujem v Next.js, takže stránka ide na Vercel bez divadla s hostingom. Od vizitky po e-shop.",
@@ -58,7 +64,9 @@ export const CHAMBERS: Chamber[] = [
     index: 2,
     combo: "12",
     short: "Reklamy",
+    rim: "Reklamy",
     title: "Reklamy nastavené tak, aby sa dalo povedať, čo zarába",
+    doorTitle: "Reklamy, čo zarábajú",
     kicker: "Komora 12 · kampane",
     lead: "Neklikám „publikovať“ a dúfam. Najprv meranie, potom budget.",
     body: "Pripravím Google Ads alebo Meta kampane: štruktúru účtu, konverzie, pixel a texty, ktoré sedia k stránke. Reklama bez merania je trezor bez kľúča.",
@@ -74,7 +82,9 @@ export const CHAMBERS: Chamber[] = [
     index: 3,
     combo: "18",
     short: "Automatizácia",
+    rim: "Automat.",
     title: "Automatizácie, ktoré preberú opakovanú prácu",
+    doorTitle: "Tok namiesto klikania",
     kicker: "Komora 18 · tok",
     lead: "Ak niečo robíte trikrát ručne, dá sa to zapojiť. Formuláre, CRM, maily, tabuľky.",
     body: "Pospájam nástroje tak, aby dopyt, objednávka alebo hovor neskákali z okna do okna. Webhooky, CallBot, tabuľky a vlastné toky na mieru — bez toho, aby ste držali celý proces v hlave.",
@@ -90,14 +100,16 @@ export const CHAMBERS: Chamber[] = [
     index: 4,
     combo: "24",
     short: "Recenzie",
+    rim: "Recenzie",
     title: "Pečate z práce, nie vymyslené hviezdičky",
+    doorTitle: "Pečate z práce",
     kicker: "Komora 24 · dôvera",
     lead: "Do trezoru dávam reálne veci, ktoré som postavil. Falošné recenzie sem nepatria.",
-    body: "Tu budú mená klientov, keď po odovzdaní budú chcieť nechať pečať. Zatiaľ otváram komoru ukážkou práce: e-shop, CRM, weby a nástroje, ktoré už bežia.",
+    body: "Tu budú mená klientov, keď po odovzdaní budú chcieť nechať pečať. Zatiaľ otváram komoru ukážkou práce: e-shop a CRM, ktoré už bežia.",
     bullets: [
       "Kofein — e-shop s platbami a správou objednávok",
       "CallBot CRM — kampane, hovory a automatizácia predaja",
-      "Scalar.sk a ďalšie weby postavené na merateľný výsledok",
+      "Meranie a toky, aby sa dalo povedať, čo zarába",
     ],
     cta: "Pozrieť prístup",
   },
@@ -106,7 +118,9 @@ export const CHAMBERS: Chamber[] = [
     index: 5,
     combo: "30",
     short: "Prístup",
+    rim: "Prístup",
     title: "Krátky kód: brief, návrh, stavba, kľúče",
+    doorTitle: "Brief, návrh, kľúče",
     kicker: "Komora 30 · ako pracujem",
     lead: "Bez agentúrnych posunov. Píšete mne, odpovedám ja, odovzdávam ja.",
     body: "Začneme krátkym zadaním, čo má stránka spraviť. Potom uvidíte návrh, schválite smer a idem stavať. Na konci dostanete prístupy, nie prezentáciu o tom, ako by to mohlo vyzerať.",
@@ -122,7 +136,9 @@ export const CHAMBERS: Chamber[] = [
     index: 6,
     combo: "36",
     short: "Kontakt",
+    rim: "Kontakt",
     title: "Napíšte, ktorú komoru chcete otvoriť",
+    doorTitle: "Otvorte dvere správou",
     kicker: "Komora 36 · spojenie",
     lead: "Jedna správa stačí. Odpoviem s ďalším krokom, nie s balíčkom o ničom.",
     body: "Napíšte, či ide o dizajn, celý web, reklamy alebo automatizácie. Ak neviete, nechajte kolečko tam, kde to cítite, a opíšte problém. Kód doladíme spolu.",

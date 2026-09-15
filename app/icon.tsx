@@ -13,26 +13,25 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#e6ebf3",
+          background: "#8b97a6",
           borderRadius: 16,
         }}
       >
         <div
           style={{
-            width: 22,
-            height: 22,
-            borderRadius: 11,
-            background: "#e6ebf3",
-            boxShadow: "3px 3px 6px #c3cedc, -3px -3px 6px #ffffff",
-            color: "#4d6a8a",
-            fontSize: 9,
+            width: 18,
+            height: 18,
+            borderRadius: 9,
+            background: "#1c242e",
+            color: "#c4a046",
+            fontSize: 8,
             fontWeight: 700,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          SP
+          00
         </div>
       </div>
     ),

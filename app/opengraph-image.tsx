@@ -15,9 +15,9 @@ export default function OpenGraphImage() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#e6ebf3",
-          color: "#2a3443",
-          padding: 72,
+          background: "#dce3ee",
+          color: "#243040",
+          padding: 64,
         }}
       >
         <div
@@ -25,7 +25,6 @@ export default function OpenGraphImage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            textAlign: "center",
           }}
         >
           <div
@@ -34,18 +33,24 @@ export default function OpenGraphImage() {
               width: 220,
               height: 220,
               borderRadius: 110,
-              background: "#e6ebf3",
-              boxShadow: "12px 12px 24px #c3cedc, -12px -12px 24px #ffffff",
+              background: "linear-gradient(145deg, #cfd6de, #5a6572)",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: 36,
+              marginBottom: 32,
             }}
           >
             <div
               style={{
                 display: "flex",
-                fontSize: 64,
+                width: 108,
+                height: 108,
+                borderRadius: 54,
+                background: "#1c242e",
+                color: "#f3efe4",
+                fontSize: 40,
                 fontWeight: 650,
+                alignItems: "center",
+                justifyContent: "center",
               }}
             >
               00
@@ -54,24 +59,23 @@ export default function OpenGraphImage() {
           <div
             style={{
               display: "flex",
-              fontSize: 20,
-              letterSpacing: 5,
-              textTransform: "uppercase",
-              color: "#4d6a8a",
+              fontSize: 18,
+              letterSpacing: 6,
+              color: "#7a5a1c",
             }}
           >
-            Samuel Patak · freelancer
+            SP · 00
           </div>
           <div
             style={{
               display: "flex",
-              fontSize: 52,
-              lineHeight: 1.1,
-              marginTop: 16,
-              maxWidth: 820,
+              fontSize: 40,
+              marginTop: 14,
+              maxWidth: 760,
+              textAlign: "center",
             }}
           >
-            Natočte trezor. Vnútri je presne to, čo hľadáte.
+            {SITE.tagline}
           </div>
         </div>
       </div>

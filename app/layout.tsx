@@ -87,6 +87,7 @@ export default function RootLayout({
   return (
     <html lang="sk" className={`${outfit.variable} ${figtree.variable}`}>
       <body className="neu-page antialiased">
+        <div className="neu-grain" aria-hidden="true" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

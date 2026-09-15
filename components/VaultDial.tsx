@@ -35,6 +35,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   const raf = useRef<number | null>(null);
   const onChangeRef = useRef(onChange);
   const [rotation, setRotation] = useState(index * CHAMBER_STEP);
+  const [glint, setGlint] = useState({ x: 32, y: 26 });
   const labelId = useId();
   const reduced = useRef(false);
 
@@ -51,6 +52,16 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
       cancelAnimationFrame(raf.current);
       raf.current = null;
     }
+  }, []);
+
+  const updateGlint = useCallback((clientX: number, clientY: number) => {
+    const el = wheelRef.current;
+    if (!el) return;
+    const box = el.getBoundingClientRect();
+    setGlint({
+      x: ((clientX - box.left) / box.width) * 100,
+      y: ((clientY - box.top) / box.height) * 100,
+    });
   }, []);
 
   useEffect(() => {
@@ -125,13 +136,19 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
     lastDragTick.current = rotationRef.current;
     velocity.current = 0;
     samples.current = [{ t: performance.now(), r: rotationRef.current }];
-    event.currentTarget.setPointerCapture(event.pointerId);
+    updateGlint(event.clientX, event.clientY);
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId);
+    } catch {
+      /* ignore */
+    }
   };
 
   const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    updateGlint(event.clientX, event.clientY);
     if (!dragging.current) return;
     const next =
-      startRot.current +
+      startRot.current -
       shortestAngleDelta(startPointer.current, angleAt(event.clientX, event.clientY));
     applyRotation(next);
     if (Math.abs(next - lastDragTick.current) >= 18) {
@@ -176,41 +193,16 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[22.5rem] sm:max-w-[25rem]">
+    <div className="mx-auto w-full max-w-[20.5rem] sm:max-w-[22.5rem]">
       <div className="relative mx-auto aspect-square w-full">
         <p id={labelId} className="sr-only">
           Kolečko trezoru. Ťahajte, kliknite na kategóriu, alebo použite šípky.
         </p>
-
-        {CHAMBERS.map((item, i) => {
-          const angle = i * CHAMBER_STEP;
-          const selected = i === index;
-          return (
-            <div
-              key={item.id}
-              className="pointer-events-none absolute inset-0 z-20"
-              style={{ transform: `rotate(${angle}deg)` }}
-            >
-              <button
-                type="button"
-                className={`pointer-events-auto absolute top-0 left-1/2 min-h-9 max-w-[5.2rem] rounded-full px-2 py-1 text-center text-[10px] leading-tight font-semibold tracking-[0.02em] sm:max-w-[5.6rem] sm:text-[11px] ${
-                  selected ? "neu-press text-accent" : "text-mute hover:text-ink"
-                }`}
-                style={{ transform: `translateX(-50%) rotate(${-angle}deg)` }}
-                aria-pressed={selected}
-                onClick={() =>
-                  springTo(shortestRotationToIndex(rotationRef.current, i), i)
-                }
-              >
-                {item.short}
-              </button>
-            </div>
-          );
-        })}
+        <span className="brass-notch" aria-hidden="true" />
 
         <div
           ref={wheelRef}
-          className="absolute inset-[21%] select-none sm:inset-[20%]"
+          className="absolute inset-0 select-none"
           role="slider"
           tabIndex={0}
           aria-labelledby={labelId}
@@ -220,46 +212,71 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
           aria-valuetext={`${chamber.short}, kombinácia ${chamber.combo}`}
           onKeyDown={onKeyDown}
         >
-          <div className="absolute inset-0 rounded-full neu-inset p-4 sm:p-5">
+          <div className="dial-steel-well absolute inset-0 rounded-full p-3 sm:p-3.5">
             <div
-              className="relative h-full w-full cursor-grab touch-none rounded-full neu-raised active:cursor-grabbing"
+              className="dial-steel-face relative h-full w-full cursor-grab touch-none rounded-full active:cursor-grabbing"
               onPointerDown={onPointerDown}
               onPointerMove={onPointerMove}
               onPointerUp={endDrag}
               onPointerCancel={endDrag}
             >
-              {CHAMBERS.map((item, i) => (
-                <span
-                  key={item.id}
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0"
-                  style={{ transform: `rotate(${i * CHAMBER_STEP}deg)` }}
-                >
-                  <span
-                    className={`mx-auto mt-3 block h-1.5 w-1.5 rounded-full ${
-                      i === index ? "bg-accent" : "bg-shade"
-                    }`}
-                  />
-                </span>
-              ))}
               <div
                 className="pointer-events-none absolute inset-0 will-change-transform"
-                style={{ transform: `rotate(${rotation}deg)` }}
+                style={{ transform: `rotate(${-rotation}deg)` }}
               >
-                <div className="dial-needle absolute inset-0" aria-hidden="true">
-                  <span className="dial-needle-shaft absolute left-1/2 top-[11%] h-[22%] w-[6px] -translate-x-1/2 rounded-full" />
-                  <span className="dial-needle-tip absolute left-1/2 top-[8%] h-4 w-4 -translate-x-1/2 rounded-full" />
-                </div>
+                {CHAMBERS.map((item, i) => {
+                  const selected = i === index;
+                  const upright = rotation - i * CHAMBER_STEP;
+                  return (
+                    <span
+                      key={item.id}
+                      className="pointer-events-none absolute inset-0"
+                      style={{ transform: `rotate(${i * CHAMBER_STEP}deg)` }}
+                    >
+                      <span
+                        className={`mx-auto mt-3 block h-2 w-px rounded-full ${selected ? "bg-brass" : "bg-hub/30"}`}
+                        aria-hidden="true"
+                      />
+                      <button
+                        type="button"
+                        className={`steel-num pointer-events-auto absolute top-[6%] left-1/2 ${selected ? "is-on" : ""}`}
+                        style={{ transform: `translateX(-50%) rotate(${upright}deg)` }}
+                        aria-pressed={selected}
+                        onPointerDown={(event) => event.stopPropagation()}
+                        onClick={() =>
+                          springTo(shortestRotationToIndex(rotationRef.current, i), i)
+                        }
+                      >
+                        <span className="block font-display text-[13px] leading-none tracking-[0.14em]">
+                          {item.combo}
+                        </span>
+                        <span className="mt-0.5 block text-[8px] leading-tight font-semibold tracking-[0.08em] uppercase">
+                          {item.rim}
+                        </span>
+                      </button>
+                    </span>
+                  );
+                })}
               </div>
             </div>
+            <div
+              className="dial-glint pointer-events-none absolute inset-3 rounded-full sm:inset-3.5"
+              style={{ "--glint-x": `${glint.x}%`, "--glint-y": `${glint.y}%` } as React.CSSProperties}
+            />
           </div>
 
-          <div className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-[44%] w-[44%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full neu-inset">
-            <span className="px-2 text-center text-[10px] leading-tight font-semibold uppercase tracking-[0.08em] text-mute">
-              {chamber.short}
-            </span>
-            <span className="mt-1 font-display text-3xl font-semibold leading-none text-ink">
+          <div className="dial-hub pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-[34%] w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full">
+            <span className="text-[9px] font-semibold tracking-[0.28em] text-white/55">SP</span>
+            <span className="mt-1 font-display text-[2rem] leading-none font-semibold text-[#f3efe4]">
               {chamber.combo}
+            </span>
+            <span className="mt-2 flex gap-1" aria-hidden="true">
+              {CHAMBERS.map((dot, i) => (
+                <span
+                  key={dot.id}
+                  className={`h-1.5 w-1.5 rounded-full ${i === index ? "bg-brass" : "bg-white/25"}`}
+                />
+              ))}
             </span>
           </div>
         </div>
@@ -269,38 +286,65 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
 }
 
 export function ChamberCard({ chamber }: { chamber: Chamber }) {
+  const [more, setMore] = useState(false);
+
+  useEffect(() => {
+    setMore(false);
+  }, [chamber.id]);
+
+  const href = chamber.id === "recenzie" ? "#recenzie" : "#kontakt";
+
   return (
-    <article key={chamber.id} className="rounded-[2rem] neu-raised p-1">
-      <div className="rounded-[calc(2rem-0.25rem)] px-7 py-8 sm:px-9 sm:py-10">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-accent-soft">
-          {chamber.kicker}
-        </p>
-        <h2 className="mt-3 font-display text-3xl leading-[1.08] font-semibold tracking-[-0.03em] text-ink sm:text-4xl">
-          {chamber.title}
+    <article key={chamber.id} className="door-tick door-panel">
+      <div className="door-panel-inner px-6 py-7 sm:px-8 sm:py-8">
+        <p className="metal-plate font-display text-sm font-semibold">{chamber.combo}</p>
+        <h2 className="mt-4 font-display text-[1.85rem] leading-[1.08] font-semibold tracking-[-0.03em] text-ink sm:text-[2.15rem]">
+          {chamber.doorTitle}
         </h2>
-        <p className="mt-4 text-lg leading-relaxed text-ink/80">{chamber.lead}</p>
-        <p className="mt-3 text-base leading-relaxed text-mute">{chamber.body}</p>
-        <ul className="mt-6 space-y-3">
+        <ul className="mt-5 space-y-2.5">
           {chamber.bullets.map((bullet) => (
             <li key={bullet} className="flex gap-3 text-[0.95rem] leading-relaxed text-ink/80">
-              <span
-                className="mt-1.5 h-2 w-2 shrink-0 rounded-full neu-press"
-                aria-hidden="true"
-              />
+              <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full neu-press" aria-hidden="true" />
               <span>{bullet}</span>
             </li>
           ))}
         </ul>
+        {more ? (
+          <p className="mt-4 text-[15px] leading-relaxed text-mute">{chamber.body}</p>
+        ) : null}
+        <button
+          type="button"
+          className="mt-4 min-h-10 text-[12px] tracking-[0.12em] text-accent-soft uppercase"
+          onClick={() => setMore((value) => !value)}
+          aria-expanded={more}
+        >
+          {more ? "menej" : "viac"}
+        </button>
         <a
-          href={`#${chamber.id === "kontakt" ? "kontakt" : chamber.id}`}
-          className="group mt-8 inline-flex min-h-12 items-center gap-3 rounded-full neu-raised px-5 py-2 text-sm text-ink"
+          href={href}
+          className="group mt-5 flex min-h-12 w-fit items-center gap-3 rounded-full neu-raised px-5 py-2 text-sm text-ink"
         >
           {chamber.cta}
-          <span className="flex h-8 w-8 items-center justify-center rounded-full neu-inset-sm text-accent transition-transform duration-300 ease-[var(--ease-soft)] group-hover:translate-x-0.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full neu-inset-sm text-brass-deep transition-transform duration-300 ease-[var(--ease-soft)] group-hover:translate-x-0.5">
             →
           </span>
         </a>
       </div>
     </article>
+  );
+}
+
+export function WaxSeal({ size = "sm" }: { size?: "sm" | "lg" }) {
+  const dim = size === "lg" ? "h-16 w-16 text-sm" : "h-10 w-10 text-[10px]";
+  return (
+    <span
+      className={`wax-seal relative inline-flex shrink-0 items-end justify-center overflow-hidden rounded-full ${dim}`}
+      aria-hidden="true"
+    >
+      <span className="wax-silhouette absolute top-[18%] left-1/2 h-[46%] w-[38%] -translate-x-1/2 rounded-[45%_45%_40%_40%]" />
+      <span className="relative mb-[18%] font-display font-semibold tracking-[0.12em] text-[#f3e2c4]">
+        SP
+      </span>
+    </span>
   );
 }

@@ -3,7 +3,7 @@ export const SITE = {
   monogram: "SP",
   role: "Freelancer · web, reklama, automatizácie",
   email: "samuel.patak@gmail.com",
-  tagline: "Natočte trezor. Vnútri je presne to, čo hľadáte.",
+  tagline: "Samuel Patak. Web, reklamy a automatizácie.",
   description:
     "Samuel Patak — freelancer na web dizajn, stavbu webu na kľúč, nastavenie reklám a automatizácie. Otočte kolečko trezoru a otvorte komoru, ktorá vás zaujíma.",
 };
