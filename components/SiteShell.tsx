@@ -1,28 +1,43 @@
 "use client";
 
-import { BomTable, DemandMachine, SpecSheet } from "@/components/DemandMachine";
+import { BomTable, DemandMachine } from "@/components/DemandMachine";
+import { ReviewsColumn } from "@/components/ReviewsColumn";
+import type { Review } from "@/app/reviews";
 import { PARTS, partById, partByIndex, wrapIndex, type Part } from "@/lib/parts";
 import { SITE } from "@/lib/site";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
-export function SiteShell() {
+export function SiteShell({ reviews }: { reviews: Review[] }) {
   const [index, setIndex] = useState(0);
-  const part = partByIndex(index);
+  const [opened, setOpened] = useState<number | null>(null);
+  const hovered = partByIndex(index);
+  const openPart = opened == null ? null : partByIndex(opened);
 
   useEffect(() => {
     const fromHash = () => {
       const found = partById(window.location.hash.replace("#", ""));
-      if (found) setIndex(found.index);
+      if (found) {
+        setIndex(found.index);
+        setOpened(found.index);
+      }
     };
     fromHash();
     window.addEventListener("hashchange", fromHash);
     return () => window.removeEventListener("hashchange", fromHash);
   }, []);
 
-  const select = useCallback((next: number) => {
+  const hover = useCallback((next: number) => {
+    setIndex(wrapIndex(next));
+  }, []);
+
+  const open = useCallback((next: number) => {
     const i = wrapIndex(next);
     setIndex(i);
+    setOpened(i);
     history.replaceState(null, "", `#${PARTS[i].id}`);
+    requestAnimationFrame(() => {
+      document.getElementById("diel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }, []);
 
   return (
@@ -33,11 +48,12 @@ export function SiteShell() {
       >
         Preskočiť na výkres
       </a>
-      <Header index={index} onSelect={select} />
+      <Header index={index} onOpen={open} />
       <main>
-        <Hero index={index} onSelect={select} part={part} />
-        <BuiltWork />
-        <OrderForm part={part} />
+        <Hero index={index} hovered={hovered} onHover={hover} onOpen={open} />
+        {openPart ? <PartPage part={openPart} /> : null}
+        <OrderForm part={openPart ?? hovered} />
+        <ReviewsColumn reviews={reviews} />
       </main>
       <Footer />
     </>
@@ -46,20 +62,24 @@ export function SiteShell() {
 
 function Header({
   index,
-  onSelect,
+  onOpen,
 }: {
   index: number;
-  onSelect: (index: number) => void;
+  onOpen: (index: number) => void;
 }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="flex items-start justify-between gap-4 px-4 pt-5 sm:px-6">
+    <header className="flex items-start justify-between gap-4 px-4 pt-3 sm:px-6">
       <div>
-        <p className="font-display text-2xl tracking-[-0.03em]">{SITE.name}</p>
-        <p className="mt-1 max-w-sm text-sm leading-relaxed text-mute">{SITE.role}</p>
+        <p className="font-display text-xl tracking-[-0.03em] sm:text-2xl">{SITE.name}</p>
+        <p className="mt-0.5 max-w-sm text-sm text-mute">{SITE.role}</p>
       </div>
-      <div className="relative">
+      <div className="flex items-start gap-2">
+        <a href="#recenzie" className="flex h-11 items-center border border-ink px-3 text-sm">
+          Recenzie
+        </a>
+        <div className="relative">
         <button
           type="button"
           className="flex h-11 min-w-11 items-center justify-center border border-ink px-3 text-sm"
@@ -84,7 +104,7 @@ function Header({
                   i === index ? "text-hot" : "text-ink"
                 }`}
                 onClick={() => {
-                  onSelect(i);
+                  onOpen(i);
                   setOpen(false);
                 }}
               >
@@ -94,6 +114,7 @@ function Header({
             ))}
           </nav>
         ) : null}
+        </div>
       </div>
     </header>
   );
@@ -101,63 +122,71 @@ function Header({
 
 function Hero({
   index,
-  onSelect,
-  part,
+  hovered,
+  onHover,
+  onOpen,
 }: {
   index: number;
-  onSelect: (index: number) => void;
-  part: Part;
+  hovered: Part;
+  onHover: (index: number) => void;
+  onOpen: (index: number) => void;
 }) {
   return (
-    <section id="stroj" className="px-4 py-8 sm:px-6 sm:py-10">
-      <p className="max-w-3xl font-display text-3xl leading-[1.12] tracking-[-0.03em] sm:text-5xl">
+    <section id="stroj" className="px-4 py-3 sm:px-6">
+      <p className="max-w-4xl font-display text-2xl leading-[1.12] tracking-[-0.03em] sm:text-3xl">
         {SITE.tagline}
       </p>
-      <p className="mt-4 max-w-3xl text-base leading-relaxed text-mute sm:text-lg">
-        Kliknite na diel. Dopyt padá do násypky, okolo nej sú práce, ktoré viem zapojiť.
-        Žiadny balík služieb. Jeden stroj, siedme diely.
+      <p className="mt-1 max-w-3xl text-sm text-mute">
+        Myšou označíte diel. Klikom sa pod výkresom otvorí jeho list.
       </p>
-      <div className="sheet-frame mx-auto mt-8 max-w-6xl bg-paper/55 p-2 sm:p-3">
-        <p className="border-b border-ink px-2 py-3 text-sm text-mute md:hidden">
-          dopyt do násypky, potom diel zo zoznamu
-        </p>
-        <div className="hidden md:block">
-          <DemandMachine index={index} onChange={onSelect} />
+      <div className="sheet-frame mx-auto mt-3 max-w-6xl bg-paper/55 md:grid md:grid-cols-[minmax(0,1fr)_17rem] md:items-stretch">
+        <div className="hidden p-1 md:block">
+          <DemandMachine index={index} onHover={onHover} onOpen={onOpen} />
         </div>
-        <BomTable index={index} onSelect={onSelect} />
-      </div>
-      <div className="mx-auto mt-5 max-w-3xl">
-        <SpecSheet part={part} />
+        <div className="flex min-h-0 flex-col md:border-l md:border-ink">
+          <p className="border-b border-ink px-3 py-2 text-sm text-mute md:hidden">
+            diel zo zoznamu otvorí list pod výkresom
+          </p>
+          <div className="border-b border-ink px-3 py-3">
+            <p className="text-[11px] tracking-[0.08em] text-mute uppercase">Diel {hovered.code}</p>
+            <p className="mt-1 font-display text-xl leading-tight">{hovered.short}</p>
+            <p className="mt-2 text-sm text-mute">Kliknite, otvorí sa list.</p>
+          </div>
+          <div className="px-1 py-1">
+            <BomTable index={index} onHover={onHover} onOpen={onOpen} />
+          </div>
+        </div>
       </div>
     </section>
   );
 }
 
-function BuiltWork() {
-  const pieces = [
-    { code: "EX-A", title: "Kofein", note: "E-shop s platbami a objednávkami." },
-    { code: "EX-B", title: "CallBot CRM", note: "Hovory, kampane, automatizácia predaja." },
-  ];
-
+function PartPage({ part }: { part: Part }) {
   return (
-    <section className="px-4 py-16 sm:px-6">
-      <div className="mx-auto max-w-5xl">
-        <h2 className="font-display text-3xl tracking-[-0.03em] sm:text-4xl">
-          Dva odovzdané kusy, nie vymyslené recenzie.
-        </h2>
-        <p className="mt-3 max-w-xl text-mute">
-          Ďalšie mená pribudnú po ďalšom odovzdaní.
+    <section id="diel" className="px-4 py-6 sm:px-6">
+      <article className="sheet-frame mx-auto max-w-5xl bg-paper px-6 py-8 sm:px-10 sm:py-10">
+        <p className="text-sm text-mute">
+          List {part.code} · {SITE.sheet}
         </p>
-        <div className="mt-8 grid gap-4 md:grid-cols-2">
-          {pieces.map((piece) => (
-            <article key={piece.code} className="sheet-frame bg-paper px-5 py-6">
-              <p className="text-sm text-mute">{piece.code}</p>
-              <h3 className="mt-2 font-display text-2xl">{piece.title}</h3>
-              <p className="mt-2 leading-relaxed text-mute">{piece.note}</p>
-            </article>
+        <h2 className="mt-2 font-display text-3xl leading-tight tracking-[-0.03em] sm:text-4xl">
+          {part.title}
+        </h2>
+        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-mute">{part.body}</p>
+        <ul className="mt-6 space-y-2 text-[0.95rem] leading-relaxed">
+          {part.points.map((point) => (
+            <li key={point} className="flex gap-3">
+              <span className="mt-2 h-px w-4 shrink-0 bg-rule" aria-hidden="true" />
+              <span>{point}</span>
+            </li>
           ))}
-        </div>
-      </div>
+        </ul>
+        <a
+          href="#objednavka"
+          className="mt-8 inline-flex min-h-12 items-center border border-ink bg-ink px-4 text-sm text-sheet"
+        >
+          {part.cta}
+        </a>
+      </article>
     </section>
   );
 }
@@ -186,7 +215,7 @@ function OrderForm({ part }: { part: Part }) {
     <section id="objednavka" className="px-4 py-16 sm:px-6">
       <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-start">
         <div>
-          <h2 className="font-display text-3xl tracking-[-0.03em] sm:text-4xl">
+          <h2 className="font-display text-2xl tracking-[-0.03em] sm:text-3xl">
             Objednávka dielu {part.code}
           </h2>
           <p className="mt-4 max-w-md text-lg leading-relaxed text-mute">
@@ -237,6 +266,9 @@ function Footer() {
         <p className="text-sm text-mute">
           {SITE.sheet} · {SITE.monogram}
         </p>
+        <a href="#recenzie" className="text-sm">
+          Recenzie
+        </a>
         <a href={`mailto:${SITE.email}`} className="text-sm">
           {SITE.email}
         </a>

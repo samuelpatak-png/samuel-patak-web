@@ -1,6 +1,12 @@
 "use client";
 
 import { PARTS, type Part } from "@/lib/parts";
+import { useRef } from "react";
+
+const BOX_W = 150;
+const BOX_H = 56;
+const VIEW_W = 920;
+const VIEW_H = 540;
 
 const BOXES: { x: number; y: number; from: [number, number] }[] = [
   { x: 36, y: 196, from: [380, 185] },
@@ -14,34 +20,78 @@ const BOXES: { x: number; y: number; from: [number, number] }[] = [
 
 type DemandMachineProps = {
   index: number;
-  onChange: (index: number) => void;
+  onHover: (index: number) => void;
+  onOpen: (index: number) => void;
 };
 
-export function DemandMachine({ index, onChange }: DemandMachineProps) {
+function partIndexAt(x: number, y: number): number {
+  const hit = BOXES.findIndex(
+    (box) => x >= box.x && x <= box.x + BOX_W && y >= box.y && y <= box.y + BOX_H,
+  );
+  if (hit >= 0) return hit;
+
+  let best = 0;
+  let dist = Number.POSITIVE_INFINITY;
+  BOXES.forEach((box, i) => {
+    const dx = x - (box.x + BOX_W / 2);
+    const dy = y - (box.y + BOX_H / 2);
+    const next = dx * dx + dy * dy;
+    if (next < dist) {
+      dist = next;
+      best = i;
+    }
+  });
+  return best;
+}
+
+export function DemandMachine({ index, onHover, onOpen }: DemandMachineProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+
   const onKeyDown = (event: React.KeyboardEvent<SVGSVGElement>) => {
     if (event.key === "ArrowRight" || event.key === "ArrowDown") {
       event.preventDefault();
-      onChange(index + 1);
+      onHover(index + 1);
     } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
       event.preventDefault();
-      onChange(index - 1);
+      onHover(index - 1);
+    } else if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onOpen(index);
     } else if (event.key === "Home") {
       event.preventDefault();
-      onChange(0);
+      onHover(0);
     } else if (event.key === "End") {
       event.preventDefault();
-      onChange(PARTS.length - 1);
+      onHover(PARTS.length - 1);
     }
+  };
+
+  const revealAt = (clientX: number, clientY: number) => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const rect = svg.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    const x = ((clientX - rect.left) / rect.width) * VIEW_W;
+    const y = ((clientY - rect.top) / rect.height) * VIEW_H;
+    const next = partIndexAt(x, y);
+    if (next !== index) onHover(next);
+  };
+
+  const onPointerMove = (event: React.PointerEvent<SVGSVGElement>) => {
+    if (event.pointerType === "touch") return;
+    revealAt(event.clientX, event.clientY);
   };
 
   return (
     <svg
-      className="h-auto w-full text-ink"
-      viewBox="0 0 920 540"
+      ref={svgRef}
+      className="machine-stage h-auto w-full text-ink"
+      viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
       role="radiogroup"
-      aria-label="Rozkres stroja na dopyty. Šípkami alebo klikom vyberte diel."
+      aria-label="Rozkres stroja na dopyty. Myšou označte diel, klikom otvorte list."
       tabIndex={0}
       onKeyDown={onKeyDown}
+      onPointerMove={onPointerMove}
     >
       <defs>
         <pattern id="part-hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
@@ -64,8 +114,8 @@ export function DemandMachine({ index, onChange }: DemandMachineProps) {
           key={`lead-${PARTS[i].id}`}
           x1={box.from[0]}
           y1={box.from[1]}
-          x2={box.x + 75}
-          y2={box.y + 28}
+          x2={box.x + BOX_W / 2}
+          y2={box.y + BOX_H / 2}
           stroke="currentColor"
           strokeWidth={i === index ? 1.8 : 1}
           className={i === index ? "text-hot" : "text-rule"}
@@ -103,7 +153,8 @@ export function DemandMachine({ index, onChange }: DemandMachineProps) {
           x={BOXES[i].x}
           y={BOXES[i].y}
           selected={i === index}
-          onSelect={() => onChange(i)}
+          onHover={() => onHover(i)}
+          onOpen={() => onOpen(i)}
         />
       ))}
     </svg>
@@ -115,13 +166,15 @@ function PartNode({
   x,
   y,
   selected,
-  onSelect,
+  onHover,
+  onOpen,
 }: {
   part: Part;
   x: number;
   y: number;
   selected: boolean;
-  onSelect: () => void;
+  onHover: () => void;
+  onOpen: () => void;
 }) {
   return (
     <g
@@ -130,14 +183,17 @@ function PartNode({
       aria-label={`${part.code}, ${part.short}`}
       tabIndex={-1}
       className="cursor-pointer"
-      onClick={onSelect}
+      onClick={onOpen}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") onHover();
+      }}
     >
-      {selected ? <rect x={x} y={y} width="150" height="56" className="part-hatch" /> : null}
+      {selected ? <rect x={x} y={y} width={BOX_W} height={BOX_H} className="part-hatch" /> : null}
       <rect
         x={x}
         y={y}
-        width="150"
-        height="56"
+        width={BOX_W}
+        height={BOX_H}
         fill="transparent"
         stroke="currentColor"
         strokeWidth={selected ? 2.2 : 1.3}
@@ -161,18 +217,20 @@ function PartNode({
 
 export function BomTable({
   index,
-  onSelect,
+  onHover,
+  onOpen,
 }: {
   index: number;
-  onSelect: (index: number) => void;
+  onHover: (index: number) => void;
+  onOpen: (index: number) => void;
 }) {
   return (
-    <table className="mt-2 w-full text-left text-sm">
-      <caption className="sr-only">Kusovník dielov. Vyberte riadok.</caption>
+    <table className="w-full text-left text-sm">
+      <caption className="sr-only">Kusovník dielov. Kliknite riadok, otvorí sa list.</caption>
       <thead>
-        <tr className="border-t border-ink text-mute">
-          <th className="px-2 py-2 font-normal">kód</th>
-          <th className="px-2 py-2 font-normal">diel</th>
+        <tr className="text-mute md:hidden">
+          <th className="px-2 py-1.5 font-normal">kód</th>
+          <th className="px-2 py-1.5 font-normal">diel</th>
         </tr>
       </thead>
       <tbody>
@@ -181,13 +239,16 @@ export function BomTable({
             <td colSpan={2} className="p-0">
               <button
                 type="button"
-                className={`flex min-h-12 w-full items-center gap-4 px-2 text-left ${
+                className={`flex min-h-10 w-full items-center gap-3 px-2 text-left md:min-h-9 ${
                   i === index ? "text-hot" : ""
                 }`}
-                onClick={() => onSelect(i)}
+                onClick={() => onOpen(i)}
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== "touch") onHover(i);
+                }}
                 aria-pressed={i === index}
               >
-                <span className="w-10 shrink-0">{part.code}</span>
+                <span className="w-9 shrink-0">{part.code}</span>
                 <span>{part.short}</span>
               </button>
             </td>
@@ -195,33 +256,5 @@ export function BomTable({
         ))}
       </tbody>
     </table>
-  );
-}
-
-export function SpecSheet({ part }: { part: Part }) {
-  return (
-    <article className="sheet-frame bg-paper px-6 py-6 sm:px-8 sm:py-8">
-      <p className="text-sm text-mute">
-        Diel {part.code}
-      </p>
-      <h2 className="mt-2 font-display text-3xl leading-tight tracking-[-0.02em] sm:text-4xl">
-        {part.title}
-      </h2>
-      <p className="mt-4 max-w-xl text-base leading-relaxed text-mute">{part.body}</p>
-      <ul className="mt-5 space-y-2 text-[0.95rem] leading-relaxed">
-        {part.points.map((point) => (
-          <li key={point} className="flex gap-3">
-            <span className="mt-2 h-px w-4 shrink-0 bg-rule" aria-hidden="true" />
-            <span>{point}</span>
-          </li>
-        ))}
-      </ul>
-      <a
-        href="#objednavka"
-        className="mt-7 inline-flex min-h-12 items-center border border-ink px-4 text-sm text-ink"
-      >
-        {part.cta}
-      </a>
-    </article>
   );
 }

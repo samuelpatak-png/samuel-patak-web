@@ -1,5 +1,9 @@
+import { listReviews } from "@/app/reviews";
 import { SiteShell } from "@/components/SiteShell";
 
-export default function HomePage() {
-  return <SiteShell />;
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const reviews = await listReviews();
+  return <SiteShell reviews={reviews} />;
 }
