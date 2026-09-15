@@ -1,11 +1,12 @@
 export const SITE = {
   name: "Samuel Patak",
   monogram: "SP",
-  role: "Freelancer · web, reklama, automatizácie",
+  role: "Freelancer na dopyty, web a systémy okolo nich",
   email: "samuel.patak@gmail.com",
-  tagline: "Samuel Patak. Web, reklamy a automatizácie.",
+  tagline: "Stroj na dopyty. Diel na kolečku aj na výkrese.",
+  sheet: "SP-01",
   description:
-    "Samuel Patak — freelancer na web dizajn, stavbu webu na kľúč, nastavenie reklám a automatizácie. Otočte kolečko trezoru a otvorte komoru, ktorá vás zaujíma.",
+    "Samuel Patak — freelancer na automatizácie, web design, stavbu webu, AI riešenia, reklamu, CRM a hľadanie klientov. Kliknite na diel stroja a napíšte, čo treba zapojiť.",
 };
 
 export function siteUrl(): string {

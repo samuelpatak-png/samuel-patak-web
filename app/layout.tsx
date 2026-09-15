@@ -1,17 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree, Outfit } from "next/font/google";
+import { IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import { SITE, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-const outfit = Outfit({
+const serif = Source_Serif_4({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-outfit",
+  variable: "--font-serif",
   display: "swap",
 });
 
-const figtree = Figtree({
+const ibm = IBM_Plex_Mono({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-figtree",
+  weight: ["400", "500"],
+  variable: "--font-ibm",
   display: "swap",
 });
 
@@ -32,9 +33,11 @@ export const metadata: Metadata = {
     "freelancer",
     "web dizajn",
     "tvorba webu",
-    "Google Ads",
-    "Meta reklamy",
     "automatizácie",
+    "AI",
+    "CRM",
+    "Google Ads",
+    "hľadanie klientov",
     "Slovensko",
   ],
   alternates: { canonical: "/" },
@@ -55,7 +58,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#dce3ee",
+  themeColor: "#c5d0c4",
   width: "device-width",
   initialScale: 1,
 };
@@ -70,24 +73,26 @@ export default function RootLayout({
     "@type": "Person",
     name: SITE.name,
     email: SITE.email,
-    jobTitle: "Freelance web designer & developer",
+    jobTitle: SITE.role,
     url,
     knowsLanguage: ["sk", "en"],
     offers: {
       "@type": "Offer",
       itemOffered: [
+        { "@type": "Service", name: "Automatizácie" },
         { "@type": "Service", name: "Web dizajn" },
         { "@type": "Service", name: "Stavba webu na kľúč" },
-        { "@type": "Service", name: "Nastavenie reklám" },
-        { "@type": "Service", name: "Automatizácie" },
+        { "@type": "Service", name: "AI riešenia" },
+        { "@type": "Service", name: "Reklama a propagácia" },
+        { "@type": "Service", name: "Stavba CRM" },
+        { "@type": "Service", name: "Hľadanie klientov" },
       ],
     },
   };
 
   return (
-    <html lang="sk" className={`${outfit.variable} ${figtree.variable}`}>
-      <body className="neu-page antialiased">
-        <div className="neu-grain" aria-hidden="true" />
+    <html lang="sk" className={`${serif.variable} ${ibm.variable}`}>
+      <body className="sheet antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

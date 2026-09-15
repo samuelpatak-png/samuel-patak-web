@@ -1,28 +1,31 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-serif), "Source Serif 4", Georgia, serif;
+  --font-mono: var(--font-ibm), "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-sheet: #c5d0c4;
+  --color-sheet-deep: #b3c0b3;
+  --color-ink: #243028;
+  --color-mute: #4e5d55;
+  --color-rule: #6f8a78;
+  --color-hot: #9b2f2a;
+  --color-paper: #dce6dc;
 
   --color-clay: #dce3ee;
   --color-clay-deep: #cdd6e4;
-  --color-ink: #243040;
-  --color-mute: #5c6c80;
-  --color-accent: #456384;
-  --color-accent-soft: #65809c;
   --color-light: #f7f9fc;
   --color-shade: #a9b6c9;
+  --color-brass: #c4a046;
+  --color-brass-deep: #7a5a1c;
+  --color-steel: #9aa6b4;
+  --color-hub: #1c242e;
 
   --shadow-neu: 16px 16px 32px var(--color-shade), -14px -14px 28px var(--color-light);
   --shadow-neu-sm: 9px 9px 18px var(--color-shade), -8px -8px 16px var(--color-light);
   --shadow-neu-in: inset 12px 12px 24px var(--color-shade), inset -10px -10px 20px var(--color-light);
   --shadow-neu-in-sm: inset 6px 6px 12px var(--color-shade), inset -5px -5px 10px var(--color-light);
   --shadow-neu-press: inset 8px 8px 16px var(--color-shade), inset -6px -6px 12px var(--color-light);
-
-  --color-brass: #c4a046;
-  --color-brass-deep: #7a5a1c;
-  --color-steel: #9aa6b4;
-  --color-hub: #1c242e;
 
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -33,83 +36,64 @@ html {
 
 html,
 body {
-  background: var(--color-clay);
+  background: var(--color-sheet);
   color: var(--color-ink);
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-mono);
   min-height: 100dvh;
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--color-accent) 28%, white);
+  background: color-mix(in oklab, var(--color-hot) 28%, white);
   color: var(--color-ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--color-hot);
   outline-offset: 3px;
 }
 
 button,
-a,
-[role="slider"] {
+a {
   cursor: pointer;
 }
 
-.neu-page {
-  background:
-    radial-gradient(780px 460px at 50% -8%, rgba(247, 249, 252, 0.85), transparent 55%),
-    radial-gradient(640px 380px at 80% 18%, rgba(169, 182, 201, 0.35), transparent 62%),
-    radial-gradient(520px 340px at 12% 72%, rgba(169, 182, 201, 0.28), transparent 58%),
-    var(--color-clay);
+.sheet {
+  background-color: var(--color-sheet);
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 27px,
+      color-mix(in oklab, var(--color-rule) 22%, transparent) 28px
+    );
 }
 
-.neu-raised {
+.sheet-frame {
+  border: 1px solid var(--color-ink);
+  box-shadow: 0 0 0 3px var(--color-sheet), 0 0 0 4px var(--color-ink);
+}
+
+.rule-input {
+  border: 0;
+  border-bottom: 1px solid var(--color-rule);
+  border-radius: 0;
+  background: transparent;
+}
+
+.rule-input:focus {
+  border-bottom-color: var(--color-hot);
+  outline: none;
+}
+
+.part-hatch {
+  fill: url(#part-hatch);
+}
+
+.vault-specimen {
   background: var(--color-clay);
-  box-shadow:
-    var(--shadow-neu),
-    inset 1px 1px 0 rgba(255, 255, 255, 0.55);
-}
-
-.neu-raised-sm {
-  background: var(--color-clay);
-  box-shadow: var(--shadow-neu-sm);
-}
-
-.neu-inset {
-  background: var(--color-clay);
-  box-shadow: var(--shadow-neu-in);
-}
-
-.neu-inset-sm {
-  background: var(--color-clay);
-  box-shadow: var(--shadow-neu-in-sm);
-}
-
-.neu-press {
-  background: var(--color-clay-deep);
-  box-shadow: var(--shadow-neu-press);
-}
-
-.dial-needle {
-  filter: drop-shadow(5px 8px 10px rgba(36, 48, 64, 0.5)) drop-shadow(-1px -1px 2px rgba(232, 201, 122, 0.35));
-}
-
-.dial-needle-shaft {
-  background: linear-gradient(180deg, #e8c97a 0%, #c4a046 52%, #6e4e18 100%);
-  box-shadow:
-    inset 1px 1px 2px rgba(255, 240, 200, 0.55),
-    inset -1px -2px 3px rgba(70, 45, 10, 0.4);
-}
-
-.dial-needle-tip {
-  background: radial-gradient(circle at 32% 28%, #f0d78a, #c4a046 42%, #7a5a1c 100%);
-  box-shadow:
-    3px 5px 9px rgba(42, 52, 67, 0.42),
-    -1px -1px 3px rgba(255, 240, 200, 0.55),
-    inset 1px 1px 2px rgba(255, 245, 210, 0.55);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-hub) 18%, transparent);
 }
 
 .dial-steel-well {
@@ -147,18 +131,6 @@ a,
     0 0 0 3px #8a94a0;
 }
 
-.bezel-chip {
-  background: color-mix(in oklab, var(--color-clay) 86%, white);
-  box-shadow: 5px 6px 12px var(--color-shade), -4px -4px 10px var(--color-light);
-  color: var(--color-ink);
-}
-
-.bezel-chip.is-on {
-  background: var(--color-clay-deep);
-  box-shadow: var(--shadow-neu-press);
-  color: var(--color-brass-deep);
-}
-
 .steel-num {
   min-width: 2.6rem;
   color: color-mix(in oklab, var(--color-hub) 72%, white);
@@ -191,32 +163,6 @@ a,
   mix-blend-mode: overlay;
 }
 
-.door-panel {
-  border-radius: 1.55rem;
-  padding: 6px;
-  background: linear-gradient(180deg, #d5dce4 0%, #8b96a4 52%, #6d7784 100%);
-  box-shadow:
-    14px 18px 32px var(--color-shade),
-    -8px -8px 16px var(--color-light),
-    inset 0 1px 0 rgba(255, 255, 255, 0.55);
-}
-
-.door-panel-inner {
-  border-radius: 1.2rem;
-  background: var(--color-clay);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
-}
-
-.slip-line {
-  border: 0;
-  border-bottom: 1px solid color-mix(in oklab, var(--color-shade) 70%, #8a94a0);
-  border-radius: 0;
-}
-
-.slip-line:focus {
-  border-bottom-color: var(--color-brass-deep);
-}
-
 .wax-seal {
   background:
     radial-gradient(circle at 32% 28%, #e2b15a 0%, #b4532a 46%, #6f2c16 100%);
@@ -231,59 +177,9 @@ a,
   opacity: 0.35;
 }
 
-.metal-plate {
-  display: inline-flex;
-  min-width: 3.25rem;
-  height: 2.15rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.45rem;
-  background: linear-gradient(180deg, #d7dee6 0%, #8d97a4 100%);
-  color: var(--color-hub);
-  letter-spacing: 0.1em;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    2px 3px 7px rgba(36, 48, 64, 0.28);
-}
-
-.door-tick {
-  animation: door-tick 420ms var(--ease-soft);
-}
-
-@keyframes door-tick {
-  0% {
-    transform: translateY(3px) scale(0.992);
-    filter: brightness(0.96);
-  }
-  100% {
-    transform: translateY(0) scale(1);
-    filter: brightness(1);
-  }
-}
-
-.neu-grain {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 40;
-  opacity: 0.045;
-  mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-
-.seal-screen {
-  overflow: hidden;
-  border-radius: 1.1rem;
-  box-shadow: var(--shadow-neu-in-sm);
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-
-  .door-tick {
-    animation: none;
   }
 
   *,

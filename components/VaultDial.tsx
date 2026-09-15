@@ -1,15 +1,14 @@
 "use client";
 
 import {
-  CHAMBERS,
-  CHAMBER_STEP,
-  chamberByIndex,
-  nearestChamberIndex,
+  PARTS,
+  PART_STEP,
+  nearestPartIndex,
+  partByIndex,
   shortestAngleDelta,
   shortestRotationToIndex,
   wrapIndex,
-  type Chamber,
-} from "@/lib/chambers";
+} from "@/lib/parts";
 import { armHaptics, hapticTick } from "@/lib/haptics";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 
@@ -21,20 +20,20 @@ type VaultDialProps = {
 type Sample = { t: number; r: number };
 
 export function VaultDial({ index, onChange }: VaultDialProps) {
-  const chamber = chamberByIndex(index);
+  const part = partByIndex(index);
   const wheelRef = useRef<HTMLDivElement>(null);
   const dragging = useRef(false);
   const startPointer = useRef(0);
   const startRot = useRef(0);
-  const rotationRef = useRef(index * CHAMBER_STEP);
+  const rotationRef = useRef(index * PART_STEP);
   const lastIndex = useRef(index);
   const indexRef = useRef(index);
-  const lastDragTick = useRef(index * CHAMBER_STEP);
+  const lastDragTick = useRef(index * PART_STEP);
   const samples = useRef<Sample[]>([]);
   const velocity = useRef(0);
   const raf = useRef<number | null>(null);
   const onChangeRef = useRef(onChange);
-  const [rotation, setRotation] = useState(index * CHAMBER_STEP);
+  const [rotation, setRotation] = useState(index * PART_STEP);
   const [glint, setGlint] = useState({ x: 32, y: 26 });
   const labelId = useId();
   const reduced = useRef(false);
@@ -161,7 +160,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
     const first = samples.current[0];
     const last = samples.current[samples.current.length - 1];
     if (last.t !== first.t) velocity.current = (last.r - first.r) / (last.t - first.t);
-    announce(nearestChamberIndex(next), "step");
+    announce(nearestPartIndex(next), "step");
   };
 
   const endDrag = () => {
@@ -169,9 +168,9 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
     dragging.current = false;
     const current = rotationRef.current;
     const flung = Math.abs(velocity.current) > 0.28;
-    let targetIndex = nearestChamberIndex(current + velocity.current * 220);
-    if (flung && targetIndex === nearestChamberIndex(current)) {
-      targetIndex = wrapIndex(nearestChamberIndex(current) + (velocity.current > 0 ? 1 : -1));
+    let targetIndex = nearestPartIndex(current + velocity.current * 220);
+    if (flung && targetIndex === nearestPartIndex(current)) {
+      targetIndex = wrapIndex(nearestPartIndex(current) + (velocity.current > 0 ? 1 : -1));
     }
     springTo(shortestRotationToIndex(current, targetIndex), targetIndex);
   };
@@ -188,7 +187,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
       springTo(shortestRotationToIndex(rotationRef.current, 0), 0);
     } else if (event.key === "End") {
       event.preventDefault();
-      springTo(shortestRotationToIndex(rotationRef.current, CHAMBERS.length - 1), CHAMBERS.length - 1);
+      springTo(shortestRotationToIndex(rotationRef.current, PARTS.length - 1), PARTS.length - 1);
     }
   };
 
@@ -207,9 +206,9 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
           tabIndex={0}
           aria-labelledby={labelId}
           aria-valuemin={0}
-          aria-valuemax={CHAMBERS.length - 1}
+          aria-valuemax={PARTS.length - 1}
           aria-valuenow={index}
-          aria-valuetext={`${chamber.short}, kombinácia ${chamber.combo}`}
+          aria-valuetext={`${part.short}, kombinácia ${part.code}`}
           onKeyDown={onKeyDown}
         >
           <div className="dial-steel-well absolute inset-0 rounded-full p-3 sm:p-3.5">
@@ -224,14 +223,14 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
                 className="pointer-events-none absolute inset-0 will-change-transform"
                 style={{ transform: `rotate(${-rotation}deg)` }}
               >
-                {CHAMBERS.map((item, i) => {
+                {PARTS.map((item, i) => {
                   const selected = i === index;
-                  const upright = rotation - i * CHAMBER_STEP;
+                  const upright = rotation - i * PART_STEP;
                   return (
                     <span
                       key={item.id}
                       className="pointer-events-none absolute inset-0"
-                      style={{ transform: `rotate(${i * CHAMBER_STEP}deg)` }}
+                      style={{ transform: `rotate(${i * PART_STEP}deg)` }}
                     >
                       <span
                         className={`mx-auto mt-3 block h-2 w-px rounded-full ${selected ? "bg-brass" : "bg-hub/30"}`}
@@ -248,7 +247,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
                         }
                       >
                         <span className="block font-display text-[13px] leading-none tracking-[0.14em]">
-                          {item.combo}
+                          {item.code}
                         </span>
                         <span className="mt-0.5 block text-[8px] leading-tight font-semibold tracking-[0.08em] uppercase">
                           {item.rim}
@@ -268,10 +267,10 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
           <div className="dial-hub pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-[34%] w-[34%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full">
             <span className="text-[9px] font-semibold tracking-[0.28em] text-white/55">SP</span>
             <span className="mt-1 font-display text-[2rem] leading-none font-semibold text-[#f3efe4]">
-              {chamber.combo}
+              {part.code}
             </span>
             <span className="mt-2 flex gap-1" aria-hidden="true">
-              {CHAMBERS.map((dot, i) => (
+              {PARTS.map((dot, i) => (
                 <span
                   key={dot.id}
                   className={`h-1.5 w-1.5 rounded-full ${i === index ? "bg-brass" : "bg-white/25"}`}
@@ -282,55 +281,6 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
         </div>
       </div>
     </div>
-  );
-}
-
-export function ChamberCard({ chamber }: { chamber: Chamber }) {
-  const [more, setMore] = useState(false);
-
-  useEffect(() => {
-    setMore(false);
-  }, [chamber.id]);
-
-  const href = chamber.id === "recenzie" ? "#recenzie" : "#kontakt";
-
-  return (
-    <article key={chamber.id} className="door-tick door-panel">
-      <div className="door-panel-inner px-6 py-7 sm:px-8 sm:py-8">
-        <p className="metal-plate font-display text-sm font-semibold">{chamber.combo}</p>
-        <h2 className="mt-4 font-display text-[1.85rem] leading-[1.08] font-semibold tracking-[-0.03em] text-ink sm:text-[2.15rem]">
-          {chamber.doorTitle}
-        </h2>
-        <ul className="mt-5 space-y-2.5">
-          {chamber.bullets.map((bullet) => (
-            <li key={bullet} className="flex gap-3 text-[0.95rem] leading-relaxed text-ink/80">
-              <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full neu-press" aria-hidden="true" />
-              <span>{bullet}</span>
-            </li>
-          ))}
-        </ul>
-        {more ? (
-          <p className="mt-4 text-[15px] leading-relaxed text-mute">{chamber.body}</p>
-        ) : null}
-        <button
-          type="button"
-          className="mt-4 min-h-10 text-[12px] tracking-[0.12em] text-accent-soft uppercase"
-          onClick={() => setMore((value) => !value)}
-          aria-expanded={more}
-        >
-          {more ? "menej" : "viac"}
-        </button>
-        <a
-          href={href}
-          className="group mt-5 flex min-h-12 w-fit items-center gap-3 rounded-full neu-raised px-5 py-2 text-sm text-ink"
-        >
-          {chamber.cta}
-          <span className="flex h-8 w-8 items-center justify-center rounded-full neu-inset-sm text-brass-deep transition-transform duration-300 ease-[var(--ease-soft)] group-hover:translate-x-0.5">
-            →
-          </span>
-        </a>
-      </div>
-    </article>
   );
 }
 
