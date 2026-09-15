@@ -34,6 +34,7 @@ export const metadata: Metadata = {
     "tvorba webu",
     "Google Ads",
     "Meta reklamy",
+    "automatizácie",
     "Slovensko",
   ],
   alternates: { canonical: "/" },
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#e6ebf3",
+  themeColor: "#dce3ee",
   width: "device-width",
   initialScale: 1,
 };
@@ -78,6 +79,7 @@ export default function RootLayout({
         { "@type": "Service", name: "Web dizajn" },
         { "@type": "Service", name: "Stavba webu na kľúč" },
         { "@type": "Service", name: "Nastavenie reklám" },
+        { "@type": "Service", name: "Automatizácie" },
       ],
     },
   };

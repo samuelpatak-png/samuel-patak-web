@@ -176,88 +176,94 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   };
 
   return (
-    <div className="mx-auto w-full max-w-[22rem] sm:max-w-[24rem]">
-      <div
-        ref={wheelRef}
-        className="relative mx-auto aspect-square w-[min(100%,18.5rem)] select-none sm:w-[min(100%,20rem)]"
-        role="slider"
-        tabIndex={0}
-        aria-labelledby={labelId}
-        aria-valuemin={0}
-        aria-valuemax={CHAMBERS.length - 1}
-        aria-valuenow={index}
-        aria-valuetext={`${chamber.short}, kombinácia ${chamber.combo}`}
-        onKeyDown={onKeyDown}
-      >
+    <div className="mx-auto w-full max-w-[22.5rem] sm:max-w-[25rem]">
+      <div className="relative mx-auto aspect-square w-full">
         <p id={labelId} className="sr-only">
-          Kolečko trezoru. Ťahajte, alebo použite šípky.
+          Kolečko trezoru. Ťahajte, kliknite na kategóriu, alebo použite šípky.
         </p>
 
-        <div className="absolute inset-0 rounded-full neu-inset p-5">
-          <div
-            className="relative h-full w-full cursor-grab touch-none rounded-full neu-raised active:cursor-grabbing"
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={endDrag}
-            onPointerCancel={endDrag}
-          >
-            {CHAMBERS.map((item, i) => (
-              <span
-                key={item.id}
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0"
-                style={{ transform: `rotate(${i * CHAMBER_STEP}deg)` }}
-              >
-                <span
-                  className={`mx-auto mt-3 block h-1.5 w-1.5 rounded-full ${
-                    i === index ? "bg-accent" : "bg-shade"
-                  }`}
-                />
-              </span>
-            ))}
-            <div
-              className="pointer-events-none absolute inset-0 will-change-transform"
-              style={{ transform: `rotate(${rotation}deg)` }}
-            >
-              <div className="dial-needle absolute inset-0" aria-hidden="true">
-                <span className="dial-needle-shaft absolute left-1/2 top-[11%] h-[22%] w-[6px] -translate-x-1/2 rounded-full" />
-                <span className="dial-needle-tip absolute left-1/2 top-[8%] h-4 w-4 -translate-x-1/2 rounded-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 flex h-[44%] w-[44%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full neu-inset">
-          <span className="text-[10px] uppercase tracking-[0.28em] text-mute">
-            {chamber.short}
-          </span>
-          <span className="mt-1 font-display text-3xl font-semibold leading-none text-ink">
-            {chamber.combo}
-          </span>
-        </div>
-      </div>
-
-      <ul className="mt-8 flex flex-wrap justify-center gap-2" aria-label="Komory kolečka">
         {CHAMBERS.map((item, i) => {
+          const angle = i * CHAMBER_STEP;
           const selected = i === index;
           return (
-            <li key={item.id}>
+            <div
+              key={item.id}
+              className="pointer-events-none absolute inset-0 z-20"
+              style={{ transform: `rotate(${angle}deg)` }}
+            >
               <button
                 type="button"
-                className={`min-h-11 cursor-pointer rounded-full px-3.5 text-[12px] font-medium tracking-[0.02em] transition-all duration-300 ease-[var(--ease-soft)] ${
+                className={`pointer-events-auto absolute top-0 left-1/2 min-h-9 max-w-[5.2rem] rounded-full px-2 py-1 text-center text-[10px] leading-tight font-semibold tracking-[0.02em] sm:max-w-[5.6rem] sm:text-[11px] ${
                   selected ? "neu-press text-accent" : "text-mute hover:text-ink"
                 }`}
+                style={{ transform: `translateX(-50%) rotate(${-angle}deg)` }}
+                aria-pressed={selected}
                 onClick={() =>
                   springTo(shortestRotationToIndex(rotationRef.current, i), i)
                 }
-                aria-pressed={selected}
               >
                 {item.short}
               </button>
-            </li>
+            </div>
           );
         })}
-      </ul>
+
+        <div
+          ref={wheelRef}
+          className="absolute inset-[21%] select-none sm:inset-[20%]"
+          role="slider"
+          tabIndex={0}
+          aria-labelledby={labelId}
+          aria-valuemin={0}
+          aria-valuemax={CHAMBERS.length - 1}
+          aria-valuenow={index}
+          aria-valuetext={`${chamber.short}, kombinácia ${chamber.combo}`}
+          onKeyDown={onKeyDown}
+        >
+          <div className="absolute inset-0 rounded-full neu-inset p-4 sm:p-5">
+            <div
+              className="relative h-full w-full cursor-grab touch-none rounded-full neu-raised active:cursor-grabbing"
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={endDrag}
+              onPointerCancel={endDrag}
+            >
+              {CHAMBERS.map((item, i) => (
+                <span
+                  key={item.id}
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0"
+                  style={{ transform: `rotate(${i * CHAMBER_STEP}deg)` }}
+                >
+                  <span
+                    className={`mx-auto mt-3 block h-1.5 w-1.5 rounded-full ${
+                      i === index ? "bg-accent" : "bg-shade"
+                    }`}
+                  />
+                </span>
+              ))}
+              <div
+                className="pointer-events-none absolute inset-0 will-change-transform"
+                style={{ transform: `rotate(${rotation}deg)` }}
+              >
+                <div className="dial-needle absolute inset-0" aria-hidden="true">
+                  <span className="dial-needle-shaft absolute left-1/2 top-[11%] h-[22%] w-[6px] -translate-x-1/2 rounded-full" />
+                  <span className="dial-needle-tip absolute left-1/2 top-[8%] h-4 w-4 -translate-x-1/2 rounded-full" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="pointer-events-none absolute top-1/2 left-1/2 z-10 flex h-[44%] w-[44%] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full neu-inset">
+            <span className="px-2 text-center text-[10px] leading-tight font-semibold uppercase tracking-[0.08em] text-mute">
+              {chamber.short}
+            </span>
+            <span className="mt-1 font-display text-3xl font-semibold leading-none text-ink">
+              {chamber.combo}
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

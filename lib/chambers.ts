@@ -2,6 +2,7 @@ export type ChamberId =
   | "dizajn"
   | "stavba"
   | "reklamy"
+  | "automatizacia"
   | "recenzie"
   | "pristup"
   | "kontakt";
@@ -69,12 +70,28 @@ export const CHAMBERS: Chamber[] = [
     cta: "Chcem nastaviť reklamy",
   },
   {
-    id: "recenzie",
+    id: "automatizacia",
     index: 3,
     combo: "18",
+    short: "Automatizácia",
+    title: "Automatizácie, ktoré preberú opakovanú prácu",
+    kicker: "Komora 18 · tok",
+    lead: "Ak niečo robíte trikrát ručne, dá sa to zapojiť. Formuláre, CRM, maily, tabuľky.",
+    body: "Pospájam nástroje tak, aby dopyt, objednávka alebo hovor neskákali z okna do okna. Webhooky, CallBot, tabuľky a vlastné toky na mieru — bez toho, aby ste držali celý proces v hlave.",
+    bullets: [
+      "Prepojenie webu, formulárov, CRM a mailu do jedného toku",
+      "Odstránenie ručného preklikávania pri dopytoch a objednávkach",
+      "Vlastné automatizácie, nie len jeden univerzálny recept",
+    ],
+    cta: "Chcem automatizovať",
+  },
+  {
+    id: "recenzie",
+    index: 4,
+    combo: "24",
     short: "Recenzie",
     title: "Pečate z práce, nie vymyslené hviezdičky",
-    kicker: "Komora 18 · dôvera",
+    kicker: "Komora 24 · dôvera",
     lead: "Do trezoru dávam reálne veci, ktoré som postavil. Falošné recenzie sem nepatria.",
     body: "Tu budú mená klientov, keď po odovzdaní budú chcieť nechať pečať. Zatiaľ otváram komoru ukážkou práce: e-shop, CRM, weby a nástroje, ktoré už bežia.",
     bullets: [
@@ -86,11 +103,11 @@ export const CHAMBERS: Chamber[] = [
   },
   {
     id: "pristup",
-    index: 4,
-    combo: "24",
+    index: 5,
+    combo: "30",
     short: "Prístup",
     title: "Krátky kód: brief, návrh, stavba, kľúče",
-    kicker: "Komora 24 · ako pracujem",
+    kicker: "Komora 30 · ako pracujem",
     lead: "Bez agentúrnych posunov. Píšete mne, odpovedám ja, odovzdávam ja.",
     body: "Začneme krátkym zadaním, čo má stránka spraviť. Potom uvidíte návrh, schválite smer a idem stavať. Na konci dostanete prístupy, nie prezentáciu o tom, ako by to mohlo vyzerať.",
     bullets: [
@@ -102,13 +119,13 @@ export const CHAMBERS: Chamber[] = [
   },
   {
     id: "kontakt",
-    index: 5,
-    combo: "30",
+    index: 6,
+    combo: "36",
     short: "Kontakt",
     title: "Napíšte, ktorú komoru chcete otvoriť",
-    kicker: "Komora 30 · spojenie",
+    kicker: "Komora 36 · spojenie",
     lead: "Jedna správa stačí. Odpoviem s ďalším krokom, nie s balíčkom o ničom.",
-    body: "Napíšte, či ide o dizajn, celý web alebo reklamy. Ak neviete, nechajte kolečko tam, kde to cítite, a opíšte problém. Kód doladíme spolu.",
+    body: "Napíšte, či ide o dizajn, celý web, reklamy alebo automatizácie. Ak neviete, nechajte kolečko tam, kde to cítite, a opíšte problém. Kód doladíme spolu.",
     bullets: [
       "samuel.patak@gmail.com",
       "Odpoveď zvyčajne do jedného pracovného dňa",

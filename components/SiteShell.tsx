@@ -50,8 +50,8 @@ function Nav({
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4 pt-5">
-      <div className="pointer-events-auto flex w-full max-w-4xl items-center justify-between gap-4 rounded-full neu-raised px-2 py-2">
+    <header className="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4 pt-4">
+      <div className="pointer-events-auto flex w-full max-w-5xl items-center justify-between gap-3 rounded-full neu-raised px-2 py-2">
         <a href="#dizajn" className="flex items-center gap-3 pl-2">
           <span className="flex h-10 w-10 items-center justify-center rounded-full neu-inset-sm font-display text-[11px] font-semibold text-accent">
             {SITE.monogram}
@@ -60,20 +60,6 @@ function Nav({
             {SITE.name}
           </span>
         </a>
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Komory">
-          {CHAMBERS.map((item, i) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => onSelect(i)}
-              className={`min-h-11 rounded-full px-3 text-[11px] font-medium tracking-[0.04em] transition-all duration-300 ease-[var(--ease-soft)] ${
-                i === index ? "neu-press text-accent" : "text-mute hover:text-ink"
-              }`}
-            >
-              {item.short}
-            </button>
-          ))}
-        </nav>
         <div className="flex items-center gap-2">
           <a
             href="#kontakt"
@@ -104,7 +90,7 @@ function Nav({
       {open ? (
         <div
           id="mobile-menu"
-          className="pointer-events-auto absolute inset-x-4 top-[4.6rem] z-30 rounded-[1.8rem] neu-raised p-4 lg:hidden"
+          className="pointer-events-auto absolute inset-x-4 top-[4.4rem] z-30 rounded-[1.8rem] neu-raised p-4 lg:hidden"
         >
           <nav className="grid gap-1" aria-label="Mobilné komory">
             {CHAMBERS.map((item, i) => (
@@ -140,22 +126,22 @@ function Hero({
   chamber: ReturnType<typeof chamberByIndex>;
 }) {
   return (
-    <section className="relative min-h-[100dvh] overflow-visible px-4 pb-20 pt-32 sm:px-6">
+    <section className="relative overflow-visible px-4 pb-16 pt-[5.25rem] sm:px-6 sm:pt-24">
       <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
         <p className="rounded-full neu-inset-sm px-4 py-1.5 text-[11px] uppercase tracking-[0.22em] text-accent-soft">
           {SITE.role}
         </p>
-        <h1 className="mt-7 max-w-2xl font-display text-4xl leading-[0.98] font-semibold tracking-[-0.04em] text-ink sm:text-6xl">
+        <h1 className="mt-4 max-w-2xl font-display text-3xl leading-[0.98] font-semibold tracking-[-0.04em] text-ink sm:mt-5 sm:text-5xl">
           {SITE.tagline}
         </h1>
-        <p className="mt-5 max-w-lg text-lg leading-relaxed text-mute">
-          Som Samuel Patak. Freelancer na web dizajn, stavbu celého webu a nastavenie
-          reklám. Natočte kolečko na to, čo vás zaujíma.
+        <p className="mt-3 max-w-lg text-base leading-relaxed text-mute sm:text-lg">
+          Som Samuel Patak. Freelancer na web dizajn, stavbu webu, reklamy a
+          automatizácie. Natočte kolečko, alebo kliknite kategóriu.
         </p>
-        <div className="mt-10 w-full">
+        <div className="mt-5 w-full sm:mt-6">
           <VaultDial index={index} onChange={onSelect} />
         </div>
-        <div className="mt-10 w-full max-w-xl text-left">
+        <div className="mt-8 w-full max-w-xl text-left">
           <ChamberCard chamber={chamber} />
         </div>
       </div>
@@ -165,16 +151,16 @@ function Hero({
 
 function WorkProof() {
   const seals = [
-    { combo: "18A", title: "Kofein", note: "E-shop s platbami a objednávkami." },
-    { combo: "18B", title: "CallBot CRM", note: "Hovory, kampane, automatizácia predaja." },
-    { combo: "18C", title: "Scalar.sk", note: "Web a nástroje, ktoré majú prinášať dopyt." },
+    { combo: "24A", title: "Kofein", note: "E-shop s platbami a objednávkami." },
+    { combo: "24B", title: "CallBot CRM", note: "Hovory, kampane, automatizácia predaja." },
+    { combo: "24C", title: "Scalar.sk", note: "Web a nástroje, ktoré majú prinášať dopyt." },
   ];
 
   return (
     <section id="recenzie" className="px-4 py-24 sm:px-6">
       <div className="mx-auto max-w-5xl">
         <p className="text-center text-[11px] uppercase tracking-[0.22em] text-accent-soft">
-          Komora 18 · pečate
+          Komora 24 · pečate
         </p>
         <h2 className="mx-auto mt-3 max-w-2xl text-center font-display text-4xl tracking-[-0.03em] text-ink sm:text-5xl">
           Recenzie sem patria až po odovzdaní. Zatiaľ tu visia pečate z reálnej práce.
@@ -218,7 +204,9 @@ function DetailSections({ onSelect }: { onSelect: (index: number) => void }) {
                       ? "Stavba celého webu"
                       : item.short === "Reklamy"
                         ? "Nastavovanie reklám"
-                        : item.title}
+                        : item.short === "Automatizácia"
+                          ? "Automatizácie"
+                          : item.title}
                 </h2>
                 <p className="mt-3 max-w-2xl leading-relaxed text-mute">{item.body}</p>
               </div>
@@ -269,7 +257,7 @@ function ContactSection({
       <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-start">
         <div>
           <p className="text-[11px] uppercase tracking-[0.22em] text-accent-soft">
-            Komora 30 · spojenie
+            Komora 36 · spojenie
           </p>
           <h2 className="mt-3 font-display text-4xl tracking-[-0.03em] text-ink sm:text-5xl">
             Otvorte dvere správou, nie formulárom o ničom.
@@ -331,7 +319,7 @@ function Footer() {
     <footer className="px-4 pb-10 sm:px-6">
       <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-4 rounded-[2rem] neu-raised px-6 py-6 sm:flex-row sm:items-center">
         <p className="text-xs uppercase tracking-[0.2em] text-mute">
-          {SITE.monogram} · kombinácia 00–30
+          {SITE.monogram} · kombinácia 00–36
         </p>
         <a href={`mailto:${SITE.email}`} className="text-sm text-accent">
           {SITE.email}

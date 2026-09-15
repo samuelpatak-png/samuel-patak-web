@@ -4,20 +4,20 @@
   --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
 
-  --color-clay: #e6ebf3;
-  --color-clay-deep: #d8dee8;
-  --color-ink: #2a3443;
-  --color-mute: #667487;
-  --color-accent: #4d6a8a;
-  --color-accent-soft: #6d86a3;
-  --color-light: #ffffff;
-  --color-shade: #c3cedc;
+  --color-clay: #dce3ee;
+  --color-clay-deep: #cdd6e4;
+  --color-ink: #243040;
+  --color-mute: #5c6c80;
+  --color-accent: #456384;
+  --color-accent-soft: #65809c;
+  --color-light: #f7f9fc;
+  --color-shade: #a9b6c9;
 
-  --shadow-neu: 10px 10px 22px var(--color-shade), -10px -10px 22px var(--color-light);
-  --shadow-neu-sm: 6px 6px 14px var(--color-shade), -6px -6px 14px var(--color-light);
-  --shadow-neu-in: inset 8px 8px 16px var(--color-shade), inset -8px -8px 16px var(--color-light);
-  --shadow-neu-in-sm: inset 4px 4px 10px var(--color-shade), inset -4px -4px 10px var(--color-light);
-  --shadow-neu-press: inset 5px 5px 12px var(--color-shade), inset -5px -5px 12px var(--color-light);
+  --shadow-neu: 16px 16px 32px var(--color-shade), -14px -14px 28px var(--color-light);
+  --shadow-neu-sm: 9px 9px 18px var(--color-shade), -8px -8px 16px var(--color-light);
+  --shadow-neu-in: inset 12px 12px 24px var(--color-shade), inset -10px -10px 20px var(--color-light);
+  --shadow-neu-in-sm: inset 6px 6px 12px var(--color-shade), inset -5px -5px 10px var(--color-light);
+  --shadow-neu-press: inset 8px 8px 16px var(--color-shade), inset -6px -6px 12px var(--color-light);
 
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -55,13 +55,17 @@ a,
 
 .neu-page {
   background:
-    radial-gradient(900px 520px at 50% -10%, rgba(255, 255, 255, 0.7), transparent 58%),
+    radial-gradient(780px 460px at 50% -8%, rgba(247, 249, 252, 0.85), transparent 55%),
+    radial-gradient(640px 380px at 80% 18%, rgba(169, 182, 201, 0.35), transparent 62%),
+    radial-gradient(520px 340px at 12% 72%, rgba(169, 182, 201, 0.28), transparent 58%),
     var(--color-clay);
 }
 
 .neu-raised {
   background: var(--color-clay);
-  box-shadow: var(--shadow-neu);
+  box-shadow:
+    var(--shadow-neu),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 .neu-raised-sm {
@@ -85,7 +89,7 @@ a,
 }
 
 .dial-needle {
-  filter: drop-shadow(4px 7px 8px rgba(42, 52, 67, 0.38)) drop-shadow(-1px -1px 2px rgba(255, 255, 255, 0.7));
+  filter: drop-shadow(6px 10px 12px rgba(36, 48, 64, 0.48)) drop-shadow(-1px -1px 2px rgba(247, 249, 252, 0.75));
 }
 
 .dial-needle-shaft {
