@@ -35,11 +35,23 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   const raf = useRef<number | null>(null);
   const onChangeRef = useRef(onChange);
   const [rotation, setRotation] = useState(index * CHAMBER_STEP);
+  const [kick, setKick] = useState(false);
+  const kickTimer = useRef<number | null>(null);
   const labelId = useId();
   const reduced = useRef(false);
 
   onChangeRef.current = onChange;
   indexRef.current = index;
+
+  const bump = useCallback(() => {
+    if (reduced.current) return;
+    setKick(true);
+    if (kickTimer.current != null) window.clearTimeout(kickTimer.current);
+    kickTimer.current = window.setTimeout(() => {
+      setKick(false);
+      kickTimer.current = null;
+    }, 55);
+  }, []);
 
   const applyRotation = useCallback((value: number) => {
     rotationRef.current = value;
@@ -65,7 +77,8 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
     if (!changed) return;
     onChangeRef.current(i);
     hapticTick(haptic);
-  }, []);
+    bump();
+  }, [bump]);
 
   const springTo = useCallback(
     (target: number, nextIndex: number) => {
@@ -74,6 +87,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
       if (reduced.current) {
         applyRotation(target);
         hapticTick("snap");
+        bump();
         return;
       }
 
@@ -86,6 +100,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
         if (Math.abs(diff) < 0.12 && Math.abs(vel) < 0.12) {
           applyRotation(target);
           hapticTick("snap");
+          bump();
           raf.current = null;
           return;
         }
@@ -93,7 +108,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
       };
       raf.current = requestAnimationFrame(tick);
     },
-    [announce, applyRotation, stopRaf],
+    [announce, applyRotation, bump, stopRaf],
   );
 
   useEffect(() => {
@@ -118,6 +133,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
     event.preventDefault();
     armHaptics();
     hapticTick("grab");
+    bump();
     stopRaf();
     dragging.current = true;
     startPointer.current = angleAt(event.clientX, event.clientY);
@@ -134,9 +150,10 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
       startRot.current +
       shortestAngleDelta(startPointer.current, angleAt(event.clientX, event.clientY));
     applyRotation(next);
-    if (Math.abs(next - lastDragTick.current) >= 6) {
+    if (Math.abs(next - lastDragTick.current) >= 18) {
       lastDragTick.current = next;
       hapticTick("drag");
+      bump();
     }
     const now = performance.now();
     samples.current.push({ t: now, r: next });
@@ -195,7 +212,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
 
         <div className="absolute inset-0 rounded-full neu-inset p-5">
           <div
-            className="relative h-full w-full cursor-grab touch-none rounded-full neu-raised active:cursor-grabbing"
+            className={`relative h-full w-full cursor-grab touch-none rounded-full neu-raised active:cursor-grabbing ${kick ? "dial-kick" : ""}`}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={endDrag}
