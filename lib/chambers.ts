@@ -120,16 +120,31 @@ export const CHAMBERS: Chamber[] = [
 
 export const CHAMBER_STEP = 360 / CHAMBERS.length;
 
+export function wrapIndex(index: number): number {
+  return ((index % CHAMBERS.length) + CHAMBERS.length) % CHAMBERS.length;
+}
+
 export function chamberByIndex(index: number): Chamber {
-  const i = ((index % CHAMBERS.length) + CHAMBERS.length) % CHAMBERS.length;
-  return CHAMBERS[i];
+  return CHAMBERS[wrapIndex(index)];
 }
 
 export function nearestChamberIndex(rotation: number): number {
-  const n = ((-rotation % 360) + 360) % 360;
-  return Math.round(n / CHAMBER_STEP) % CHAMBERS.length;
+  const n = ((rotation % 360) + 360) % 360;
+  return wrapIndex(Math.round(n / CHAMBER_STEP));
 }
 
-export function rotationForIndex(index: number): number {
-  return -index * CHAMBER_STEP;
+export function shortestRotationToIndex(from: number, index: number): number {
+  const targetNorm = wrapIndex(index) * CHAMBER_STEP;
+  const currentNorm = ((from % 360) + 360) % 360;
+  let diff = targetNorm - currentNorm;
+  if (diff > 180) diff -= 360;
+  if (diff < -180) diff += 360;
+  return from + diff;
+}
+
+export function shortestAngleDelta(from: number, to: number): number {
+  let diff = to - from;
+  while (diff > 180) diff -= 360;
+  while (diff < -180) diff += 360;
+  return diff;
 }

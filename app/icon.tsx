@@ -13,36 +13,26 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#1b2028",
+          background: "#e6ebf3",
           borderRadius: 16,
         }}
       >
         <div
           style={{
-            width: 24,
-            height: 24,
-            borderRadius: 12,
-            background: "#c6a45e",
+            width: 22,
+            height: 22,
+            borderRadius: 11,
+            background: "#e6ebf3",
+            boxShadow: "3px 3px 6px #c3cedc, -3px -3px 6px #ffffff",
+            color: "#4d6a8a",
+            fontSize: 9,
+            fontWeight: 700,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <div
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 8,
-              background: "#140f11",
-              color: "#ead7a2",
-              fontSize: 8,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            SP
-          </div>
+          SP
         </div>
       </div>
     ),

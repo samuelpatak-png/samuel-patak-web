@@ -13,27 +13,51 @@ export default function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#171b21",
-          color: "#c9d0d8",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "#e6ebf3",
+          color: "#2a3443",
           padding: 72,
-          position: "relative",
         }}
       >
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between",
-            width: 640,
+            alignItems: "center",
+            textAlign: "center",
           }}
         >
           <div
             style={{
               display: "flex",
-              fontSize: 22,
-              letterSpacing: 6,
+              width: 220,
+              height: 220,
+              borderRadius: 110,
+              background: "#e6ebf3",
+              boxShadow: "12px 12px 24px #c3cedc, -12px -12px 24px #ffffff",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 36,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                fontSize: 64,
+                fontWeight: 650,
+              }}
+            >
+              00
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              fontSize: 20,
+              letterSpacing: 5,
               textTransform: "uppercase",
-              color: "#c6a45e",
+              color: "#4d6a8a",
             }}
           >
             Samuel Patak · freelancer
@@ -41,46 +65,13 @@ export default function OpenGraphImage() {
           <div
             style={{
               display: "flex",
-              fontSize: 64,
-              lineHeight: 1.05,
-              color: "#e7dcc8",
-              maxWidth: 620,
+              fontSize: 52,
+              lineHeight: 1.1,
+              marginTop: 16,
+              maxWidth: 820,
             }}
           >
             Natočte trezor. Vnútri je presne to, čo hľadáte.
-          </div>
-          <div style={{ display: "flex", fontSize: 24, color: "#a8b1bc" }}>
-            Dizajn · stavba webu · reklamy
-          </div>
-        </div>
-        <div
-          style={{
-            position: "absolute",
-            right: 80,
-            top: 90,
-            width: 360,
-            height: 360,
-            borderRadius: 180,
-            background: "#c6a45e",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              width: 300,
-              height: 300,
-              borderRadius: 150,
-              background: "#140f11",
-              color: "#ead7a2",
-              fontSize: 88,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            00
           </div>
         </div>
       </div>

@@ -1,24 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Source_Serif_4, Syne } from "next/font/google";
+import { Figtree, Outfit } from "next/font/google";
 import { SITE, siteUrl } from "@/lib/site";
 import "./globals.css";
 
-const syne = Syne({
+const outfit = Outfit({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-syne",
+  variable: "--font-outfit",
   display: "swap",
 });
 
-const serif = Source_Serif_4({
+const figtree = Figtree({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-serif",
-  display: "swap",
-});
-
-const ibm = IBM_Plex_Mono({
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
-  variable: "--font-ibm",
+  variable: "--font-figtree",
   display: "swap",
 });
 
@@ -61,7 +54,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1b2028",
+  themeColor: "#e6ebf3",
   width: "device-width",
   initialScale: 1,
 };
@@ -90,13 +83,12 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="sk" className={`${syne.variable} ${serif.variable} ${ibm.variable}`}>
-      <body className="vault-bg antialiased">
+    <html lang="sk" className={`${outfit.variable} ${figtree.variable}`}>
+      <body className="neu-page antialiased">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <div className="grain" aria-hidden="true" />
         {children}
       </body>
     </html>
