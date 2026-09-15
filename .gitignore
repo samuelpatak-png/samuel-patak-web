@@ -29,9 +29,13 @@ yarn-error.log*
 # env
 .env*.local
 .env
+.env*
 
 # vercel
 .vercel
+
+# editor
+.cursor
 
 # typescript
 next-env.d.ts
