@@ -64,7 +64,7 @@ export const CHAMBERS: Chamber[] = [
     bullets: [
       "Založenie a čistá štruktúra kampaní, nie jeden veľký kôš",
       "Sledovanie konverzií, pixel, eventy a landing zladený s inzerátom",
-      "Prvé týždne ladenia, kým je vidieť, čo tre slušne a čo treba zavrieť",
+      "Prvé týždne ladenia, kým je vidieť, čo treba nechať a čo treba zavrieť",
     ],
     cta: "Chcem nastaviť reklamy",
   },
