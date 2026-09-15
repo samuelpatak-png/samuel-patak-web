@@ -140,10 +140,10 @@ function Hero({
   chamber: ReturnType<typeof chamberByIndex>;
 }) {
   return (
-    <section className="relative min-h-[100dvh] overflow-visible px-4 pb-20 pt-28 sm:px-6 lg:px-10">
+    <section className="relative min-h-[100dvh] overflow-visible px-4 pb-20 pt-32 sm:px-6 lg:px-10">
       <CornerRivets />
-      <div className="mx-auto grid max-w-6xl items-center gap-16 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
-        <div>
+      <div className="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
+        <div className="lg:pt-16">
           <p className="inline-flex rounded-full bg-steel-mid px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-brass">
             {SITE.role}
           </p>
@@ -160,7 +160,7 @@ function Hero({
         </div>
         <div className="relative">
           <VaultDial index={index} onChange={onSelect} />
-          <div className="mx-auto mt-14 max-w-xl">
+          <div className="mx-auto mt-20 max-w-xl">
             <ChamberCard chamber={chamber} />
           </div>
         </div>
@@ -309,7 +309,7 @@ function ContactSection({
                 required
                 name="name"
                 autoComplete="name"
-                className="min-h-12 rounded-full bg-ink px-4 text-plate ring-1 ring-brass/20"
+                className="min-h-12 rounded-full bg-steel-hot px-4 text-plate ring-1 ring-brass/35"
               />
             </label>
             <label className="grid gap-2 text-sm text-mist">
@@ -319,7 +319,7 @@ function ContactSection({
                 type="email"
                 name="email"
                 autoComplete="email"
-                className="min-h-12 rounded-full bg-ink px-4 text-plate ring-1 ring-brass/20"
+                className="min-h-12 rounded-full bg-steel-hot px-4 text-plate ring-1 ring-brass/35"
               />
             </label>
             <label className="grid gap-2 text-sm text-mist">
@@ -328,7 +328,7 @@ function ContactSection({
                 required
                 name="message"
                 rows={5}
-                className="rounded-3xl bg-ink px-4 py-3 text-plate ring-1 ring-brass/20"
+                className="rounded-3xl bg-steel-hot px-4 py-3 text-plate ring-1 ring-brass/35"
                 placeholder={`Chcem ${chamber.short.toLowerCase()}…`}
               />
             </label>

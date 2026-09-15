@@ -112,6 +112,16 @@ body {
   color: var(--color-ledger-ink);
 }
 
+.vault-dial {
+  --orbit: 11.1rem;
+}
+
+@media (min-width: 640px) {
+  .vault-dial {
+    --orbit: 14.4rem;
+  }
+}
+
 .rivet {
   background:
     radial-gradient(circle at 35% 30%, #e8edf2, #8b949f 38%, #2a3038 70%);

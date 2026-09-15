@@ -119,7 +119,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   };
 
   return (
-    <div className="relative mx-auto w-full max-w-[34rem]">
+    <div className="vault-dial relative mx-auto w-full max-w-[22rem] px-8 sm:max-w-[40rem] sm:px-16">
       <ul className="pointer-events-none absolute inset-0 z-20" aria-hidden="true">
         {CHAMBERS.map((item, i) => {
           const angle = (i / CHAMBERS.length) * 360;
@@ -129,7 +129,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
               key={item.id}
               className="absolute left-1/2 top-1/2"
               style={{
-                transform: `rotate(${angle}deg) translateY(clamp(-15.2rem, -46vw, -11.4rem)) rotate(${-angle}deg) translateX(-50%)`,
+                transform: `rotate(${angle}deg) translateY(calc(var(--orbit) * -1)) rotate(${-angle}deg) translateX(-50%)`,
               }}
             >
               <button
@@ -152,7 +152,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
 
       <div
         ref={wheelRef}
-        className="relative mx-auto aspect-square w-[min(100%,28rem)] select-none"
+        className="relative mx-auto aspect-square w-[min(100%,22rem)] select-none sm:w-[min(100%,28rem)]"
         role="slider"
         tabIndex={0}
         aria-labelledby={labelId}
