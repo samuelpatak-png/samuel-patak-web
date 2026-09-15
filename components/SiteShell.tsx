@@ -1,7 +1,6 @@
 "use client";
 
 import { BomTable, DemandMachine, SpecSheet } from "@/components/DemandMachine";
-import { VaultDial, WaxSeal } from "@/components/VaultDial";
 import { PARTS, partById, partByIndex, wrapIndex, type Part } from "@/lib/parts";
 import { SITE } from "@/lib/site";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
@@ -115,31 +114,17 @@ function Hero({
         {SITE.tagline}
       </p>
       <p className="mt-4 max-w-3xl text-base leading-relaxed text-mute sm:text-lg">
-        Ťahajte kolečko alebo kliknite diel na výkrese. Oba náhľady sú zosúladené.
-        Dopyt padá do násypky, okolo nej sú práce, ktoré viem zapojiť.
+        Kliknite na diel. Dopyt padá do násypky, okolo nej sú práce, ktoré viem zapojiť.
+        Žiadny balík služieb. Jeden stroj, siedme diely.
       </p>
-      <div className="mx-auto mt-8 grid max-w-6xl items-start gap-4 lg:grid-cols-[minmax(18rem,22.5rem)_minmax(0,1fr)]">
-        <figure className="sheet-frame bg-paper p-3">
-          <figcaption className="flex items-center justify-between gap-3 border-b border-ink px-2 py-2 text-sm text-mute">
-            <span>Fig. 1 · fyzický model</span>
-            <WaxSeal />
-          </figcaption>
-          <div className="vault-specimen mt-3 px-2 py-4 sm:px-3 sm:py-5">
-            <VaultDial index={index} onChange={onSelect} />
-          </div>
-        </figure>
-        <figure className="sheet-frame bg-paper/55 p-2 sm:p-3">
-          <figcaption className="border-b border-ink px-2 py-2 text-sm text-mute">
-            Fig. 2 · rozkres stroja
-          </figcaption>
-          <p className="px-2 py-3 text-sm text-mute md:hidden">
-            na úzkom displeji je výkres v zozname dielov, kolečko ostáva hmatné
-          </p>
-          <div className="hidden md:block">
-            <DemandMachine index={index} onChange={onSelect} />
-          </div>
-          <BomTable index={index} onSelect={onSelect} />
-        </figure>
+      <div className="sheet-frame mx-auto mt-8 max-w-6xl bg-paper/55 p-2 sm:p-3">
+        <p className="border-b border-ink px-2 py-3 text-sm text-mute md:hidden">
+          dopyt do násypky, potom diel zo zoznamu
+        </p>
+        <div className="hidden md:block">
+          <DemandMachine index={index} onChange={onSelect} />
+        </div>
+        <BomTable index={index} onSelect={onSelect} />
       </div>
       <div className="mx-auto mt-5 max-w-3xl">
         <SpecSheet part={part} />
