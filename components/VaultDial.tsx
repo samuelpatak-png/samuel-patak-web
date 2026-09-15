@@ -29,6 +29,7 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   const rotationRef = useRef(index * CHAMBER_STEP);
   const lastIndex = useRef(index);
   const indexRef = useRef(index);
+  const lastDragTick = useRef(index * CHAMBER_STEP);
   const samples = useRef<Sample[]>([]);
   const velocity = useRef(0);
   const raf = useRef<number | null>(null);
@@ -116,10 +117,12 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
   const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     event.preventDefault();
     armHaptics();
+    hapticTick("grab");
     stopRaf();
     dragging.current = true;
     startPointer.current = angleAt(event.clientX, event.clientY);
     startRot.current = rotationRef.current;
+    lastDragTick.current = rotationRef.current;
     velocity.current = 0;
     samples.current = [{ t: performance.now(), r: rotationRef.current }];
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -131,6 +134,10 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
       startRot.current +
       shortestAngleDelta(startPointer.current, angleAt(event.clientX, event.clientY));
     applyRotation(next);
+    if (Math.abs(next - lastDragTick.current) >= 6) {
+      lastDragTick.current = next;
+      hapticTick("drag");
+    }
     const now = performance.now();
     samples.current.push({ t: now, r: next });
     samples.current = samples.current.filter((sample) => now - sample.t < 90);
@@ -209,13 +216,13 @@ export function VaultDial({ index, onChange }: VaultDialProps) {
               </span>
             ))}
             <div
-              className="absolute inset-0 will-change-transform"
+              className="pointer-events-none absolute inset-0 will-change-transform"
               style={{ transform: `rotate(${rotation}deg)` }}
             >
-              <span
-                className="absolute left-1/2 top-[0.85rem] h-2.5 w-2.5 -translate-x-1/2 rounded-full bg-clay neu-raised-sm"
-                aria-hidden="true"
-              />
+              <div className="dial-needle absolute inset-0" aria-hidden="true">
+                <span className="dial-needle-shaft absolute left-1/2 top-[11%] h-[22%] w-[6px] -translate-x-1/2 rounded-full" />
+                <span className="dial-needle-tip absolute left-1/2 top-[8%] h-4 w-4 -translate-x-1/2 rounded-full" />
+              </div>
             </div>
           </div>
         </div>
