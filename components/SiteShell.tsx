@@ -76,13 +76,13 @@ function Header({
         <p className="mt-0.5 max-w-sm text-sm text-mute">{SITE.role}</p>
       </div>
       <div className="flex items-start gap-2">
-        <a href="#recenzie" className="flex h-11 items-center border border-ink px-3 text-sm">
+        <a href="#recenzie" className="flex h-11 items-center border border-sheet px-3 text-sm">
           Recenzie
         </a>
         <div className="relative">
         <button
           type="button"
-          className="flex h-11 min-w-11 items-center justify-center border border-ink px-3 text-sm"
+          className="flex h-11 min-w-11 items-center justify-center border border-sheet px-3 text-sm"
           aria-expanded={open}
           aria-controls="part-menu"
           aria-label={open ? "Zavrieť zoznam dielov" : "Otvoriť zoznam dielov"}
@@ -93,7 +93,7 @@ function Header({
         {open ? (
           <nav
             id="part-menu"
-            className="absolute top-12 right-0 z-20 w-56 border border-ink bg-sheet p-2"
+            className="absolute top-12 right-0 z-20 w-56 border border-ink bg-paper p-2 text-ink"
             aria-label="Diely stroja"
           >
             {PARTS.map((item, i) => (
@@ -139,7 +139,7 @@ function Hero({
       <p className="mt-1 max-w-3xl text-sm text-mute">
         Myšou označíte diel. Klikom sa pod výkresom otvorí jeho list.
       </p>
-      <div className="sheet-frame mx-auto mt-3 max-w-6xl bg-paper/55 md:grid md:grid-cols-[minmax(0,1fr)_17rem] md:items-stretch">
+      <div className="sheet-frame mx-auto mt-3 max-w-6xl md:grid md:grid-cols-[minmax(0,1fr)_17rem] md:items-stretch">
         <div className="hidden p-1 md:block">
           <DemandMachine index={index} onHover={onHover} onOpen={onOpen} />
         </div>

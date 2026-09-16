@@ -4,13 +4,14 @@
   --font-display: var(--font-serif), "Source Serif 4", Georgia, serif;
   --font-mono: var(--font-ibm), "IBM Plex Mono", ui-monospace, monospace;
 
-  --color-sheet: #c5d0c4;
-  --color-sheet-deep: #b3c0b3;
-  --color-ink: #243028;
-  --color-mute: #4e5d55;
-  --color-rule: #6f8a78;
-  --color-hot: #9b2f2a;
-  --color-paper: #dce6dc;
+  --color-bench: #1e2420;
+  --color-sheet: #efece1;
+  --color-sheet-deep: #d9d4c4;
+  --color-ink: #1f2622;
+  --color-mute: #b3beb6;
+  --color-rule: #8a816c;
+  --color-hot: #c44a3a;
+  --color-paper: #efece1;
 }
 
 html {
@@ -19,8 +20,8 @@ html {
 
 html,
 body {
-  background: var(--color-sheet);
-  color: var(--color-ink);
+  background: var(--color-bench);
+  color: var(--color-sheet);
 }
 
 body {
@@ -29,7 +30,7 @@ body {
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--color-hot) 28%, white);
+  background: color-mix(in oklab, var(--color-hot) 40%, white);
   color: var(--color-ink);
 }
 
@@ -44,18 +45,32 @@ a {
 }
 
 .sheet {
-  background-color: var(--color-sheet);
+  background-color: var(--color-bench);
+  background-image:
+    radial-gradient(900px 420px at 50% -8%, rgba(239, 236, 225, 0.07), transparent 58%),
+    linear-gradient(180deg, #252c27 0%, #1a201c 100%);
+}
+
+.sheet-frame {
+  color: var(--color-ink);
+  background-color: var(--color-paper);
   background-image:
     repeating-linear-gradient(
       to bottom,
       transparent 0 27px,
-      color-mix(in oklab, var(--color-rule) 22%, transparent) 28px
+      color-mix(in oklab, var(--color-rule) 28%, transparent) 28px
     );
+  border: 1px solid var(--color-ink);
+  box-shadow:
+    0 0 0 6px var(--color-bench),
+    0 0 0 7px color-mix(in oklab, var(--color-sheet) 78%, white),
+    0 18px 36px rgba(0, 0, 0, 0.38);
 }
 
-.sheet-frame {
-  border: 1px solid var(--color-ink);
-  box-shadow: 0 0 0 3px var(--color-sheet), 0 0 0 4px var(--color-ink);
+.sheet-frame .text-mute,
+.sheet-frame .fill-mute {
+  color: #5c675f;
+  fill: #5c675f;
 }
 
 .rule-input {
