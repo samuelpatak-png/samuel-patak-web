@@ -24,6 +24,33 @@ type DemandMachineProps = {
   onOpen: (index: number) => void;
 };
 
+function boxEdgePoint(from: [number, number], box: { x: number; y: number }): [number, number] {
+  const cx = box.x + BOX_W / 2;
+  const cy = box.y + BOX_H / 2;
+  const dx = cx - from[0];
+  const dy = cy - from[1];
+  if (dx === 0 && dy === 0) return [cx, cy];
+
+  const ts: number[] = [];
+  if (dx !== 0) {
+    ts.push((box.x - from[0]) / dx, (box.x + BOX_W - from[0]) / dx);
+  }
+  if (dy !== 0) {
+    ts.push((box.y - from[1]) / dy, (box.y + BOX_H - from[1]) / dy);
+  }
+
+  const hit = ts
+    .filter((t) => t > 0 && t <= 1)
+    .filter((t) => {
+      const x = from[0] + t * dx;
+      const y = from[1] + t * dy;
+      return x >= box.x - 0.01 && x <= box.x + BOX_W + 0.01 && y >= box.y - 0.01 && y <= box.y + BOX_H + 0.01;
+    })
+    .sort((a, b) => a - b)[0];
+
+  return hit === undefined ? [cx, cy] : [from[0] + hit * dx, from[1] + hit * dy];
+}
+
 function partIndexAt(x: number, y: number): number {
   const hit = BOXES.findIndex(
     (box) => x >= box.x && x <= box.x + BOX_W && y >= box.y && y <= box.y + BOX_H,
@@ -109,21 +136,24 @@ export function DemandMachine({ index, onHover, onOpen }: DemandMachineProps) {
         kreslil S. Patak
       </text>
 
-      {BOXES.map((box, i) => (
-        <line
-          key={`lead-${PARTS[i].id}`}
-          x1={box.from[0]}
-          y1={box.from[1]}
-          x2={box.x + BOX_W / 2}
-          y2={box.y + BOX_H / 2}
-          stroke="currentColor"
-          strokeWidth={i === index ? 1.8 : 1}
-          className={i === index ? "text-hot" : "text-rule"}
-        />
-      ))}
+      {BOXES.map((box, i) => {
+        const [ex, ey] = boxEdgePoint(box.from, box);
+        return (
+          <line
+            key={`lead-${PARTS[i].id}`}
+            x1={box.from[0]}
+            y1={box.from[1]}
+            x2={ex}
+            y2={ey}
+            stroke="currentColor"
+            strokeWidth={i === index ? 1.8 : 1}
+            className={i === index ? "text-hot" : "text-rule"}
+          />
+        );
+      })}
 
       <polygon
-        points="400,56 520,56 548,112 372,112"
+        points="340,56 580,56 542,112 378,112"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.6"
@@ -140,9 +170,13 @@ export function DemandMachine({ index, onHover, onOpen }: DemandMachineProps) {
         jadro
       </text>
 
-      <rect x="430" y="230" width="60" height="44" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      <polygon points="430,274 490,274 510,302 410,302" fill="none" stroke="currentColor" strokeWidth="1.4" />
-      <text x="460" y="294" textAnchor="middle" fontSize="11" className="fill-mute" fontFamily="var(--font-mono)">
+      <polygon
+        points="378,230 542,230 496,284 424,284"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.6"
+      />
+      <text x="460" y="300" textAnchor="middle" fontSize="11" className="fill-mute" fontFamily="var(--font-mono)">
         zákazka
       </text>
 
