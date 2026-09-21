@@ -136,12 +136,17 @@ function Hero({
       <p className="max-w-4xl font-display text-2xl leading-[1.12] tracking-[-0.03em] sm:text-3xl">
         {SITE.tagline}
       </p>
-      <p className="mt-1 max-w-3xl text-sm text-mute">
+      <p className="mt-2 max-w-3xl text-lg leading-relaxed text-mute">
         Myšou označíte diel. Klikom sa pod výkresom otvorí jeho list.
       </p>
       <div className="sheet-frame mx-auto mt-3 max-w-6xl md:grid md:grid-cols-[minmax(0,1fr)_17rem] md:items-stretch">
-        <div className="hidden p-1 md:block">
-          <DemandMachine index={index} onHover={onHover} onOpen={onOpen} />
+        <div className="p-1">
+          <div className="overflow-x-auto md:overflow-visible">
+            <DemandMachine index={index} onHover={onHover} onOpen={onOpen} />
+          </div>
+          <p className="mt-1 text-[11px] tracking-[0.08em] text-mute uppercase md:hidden">
+            Potiahnite pre celý výkres
+          </p>
         </div>
         <div className="flex min-h-0 flex-col md:border-l md:border-ink">
           <p className="border-b border-ink px-3 py-2 text-sm text-mute md:hidden">
@@ -172,7 +177,7 @@ function PartPage({ part }: { part: Part }) {
           {part.title}
         </h2>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-mute">{part.body}</p>
-        <ul className="mt-6 space-y-2 text-[0.95rem] leading-relaxed">
+        <ul className="mt-6 space-y-2 text-base leading-relaxed">
           {part.points.map((point) => (
             <li key={point} className="flex gap-3">
               <span className="mt-2 h-px w-4 shrink-0 bg-rule" aria-hidden="true" />

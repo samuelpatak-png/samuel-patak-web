@@ -10,7 +10,7 @@
   --color-ink: #1f2622;
   --color-mute: #b3beb6;
   --color-rule: #8a816c;
-  --color-hot: #c44a3a;
+  --color-hot: #b44435;
   --color-paper: #efece1;
 }
 
@@ -91,9 +91,15 @@ a {
 
 .machine-stage {
   display: block;
-  width: min(100%, calc(min(56dvh, 23.5rem) * 920 / 540));
+  width: calc(min(56dvh, 23.5rem) * 920 / 540);
   max-height: min(56dvh, 23.5rem);
   margin-inline: auto;
+}
+
+@media (min-width: 48rem) {
+  .machine-stage {
+    width: min(100%, calc(min(56dvh, 23.5rem) * 920 / 540));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
