@@ -1,6 +1,6 @@
 # Samuel Patak
 
-Vizitka freelancera. Hero je kolečko trezoru — natočíte komoru, ktorá vás zaujíma.
+Vizitka freelancera. 
 
 - Web dizajn
 - Stavba celého webu
